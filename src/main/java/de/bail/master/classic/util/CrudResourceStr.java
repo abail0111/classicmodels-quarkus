@@ -1,5 +1,7 @@
 package de.bail.master.classic.util;
 
+import de.bail.master.classic.mapper.GenericMapper;
+
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
@@ -7,10 +9,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
-public abstract class CrudResourceStr<T extends GenericEntityStr, S extends CrudServiceStr<T, ID>, ID> {
+public abstract class CrudResourceStr<T extends GenericEntityStr, K, S extends CrudServiceStr<T>, M extends GenericMapper<T, K>> {
 
     @Inject
     public S service;
+
+    @Inject
+    public M mapper;
 
     public final String location;
 
@@ -22,13 +27,13 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, S extends Crud
         this.location = location;
     }
 
-    public Response create(T entity) {
+    public Response create(K entity) {
         Response response;
         try {
-            entity = service.create(entity);
+            T newEntity = service.create(mapper.toEntity(entity));
             response = Response.status(Response.Status.CREATED)
-                    .location(UriBuilder.fromUri(location + entity.getId()).build())
-                    .entity(entity).build();
+                    .location(UriBuilder.fromUri(location + newEntity.getId()).build())
+                    .entity(mapper.toResource(newEntity)).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
@@ -39,11 +44,11 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, S extends Crud
         return response;
     }
 
-    public Response read(ID id) {
+    public Response read(String id) {
         Response response;
         try {
             T entity = service.getEntityById(id);
-            response = Response.ok(entity).build();
+            response = Response.ok(mapper.toResource(entity)).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
@@ -58,7 +63,7 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, S extends Crud
         Response response;
         try {
             List<T> entities = service.getAllEntities();
-            response = Response.ok(entities).build();
+            response = Response.ok(mapper.toResourceList(entities)).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
@@ -69,14 +74,15 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, S extends Crud
         return response;
     }
 
-    public Response update(ID id, T entity) {
+    public Response update(String id, K entity) {
         Response response;
         try {
-            //entity.setId(id);
-            entity = service.update(entity);
+            T updatedEntity = mapper.toEntity(entity);
+            updatedEntity.setId(id);
+            updatedEntity = service.update(updatedEntity);
             response = Response.status(Response.Status.OK)
-                    .location(UriBuilder.fromUri(location + entity.getId()).build())
-                    .entity(entity).build();
+                    .location(UriBuilder.fromUri(location + updatedEntity.getId()).build())
+                    .entity(mapper.toResource(updatedEntity)).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
@@ -87,7 +93,7 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, S extends Crud
         return response;
     }
 
-    public Response delete(ID id) {
+    public Response delete(String id) {
         Response response;
         try {
             service.deleteById(id);
@@ -101,6 +107,4 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, S extends Crud
         }
         return response;
     }
-
-
 }

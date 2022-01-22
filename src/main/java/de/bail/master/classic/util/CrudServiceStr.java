@@ -10,9 +10,8 @@ import java.util.List;
 /**
  * Abstract super class for all services to provide methods for saving reading and deleting
  * @param <T>  Datatype of entity
- * @param <ID> Datatype of entity id
  */
-public abstract class CrudServiceStr<T extends GenericEntityStr, ID> {
+public abstract class CrudServiceStr<T extends GenericEntityStr> {
 
   @PersistenceContext()
   protected EntityManager em;
@@ -54,7 +53,7 @@ public abstract class CrudServiceStr<T extends GenericEntityStr, ID> {
     return entity;
   }
 
-  public T getEntityById(ID id) {
+  public T getEntityById(String id) {
     T entity = em.find(type, id);
     if (entity != null) {
       return entity;
@@ -84,7 +83,7 @@ public abstract class CrudServiceStr<T extends GenericEntityStr, ID> {
   }
 
   @Transactional
-  public void deleteById(ID id) {
+  public void deleteById(String id) {
     T entity = em.find(type, id);
     if (em.find(type, id) != null) {
       em.remove(entity);

@@ -1,14 +1,15 @@
 package de.bail.master.classic.service;
 
-import de.bail.master.classic.enities.Customer;
-import de.bail.master.classic.enities.Employee;
+import de.bail.master.classic.model.dto.CustomerDto;
+import de.bail.master.classic.model.enities.Customer;
+import de.bail.master.classic.model.enities.Employee;
 import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class CustomerService extends CrudService<Customer, Integer> {
+public class CustomerService extends CrudService<Customer> {
 
     @Inject
     EmployeeService employeeService;
@@ -31,4 +32,5 @@ public class CustomerService extends CrudService<Customer, Integer> {
         }
         return customer;
     }
+
 }

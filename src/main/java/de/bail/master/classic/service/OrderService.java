@@ -1,12 +1,12 @@
 package de.bail.master.classic.service;
 
-import de.bail.master.classic.enities.Order;
+import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class OrderService extends CrudService<Order, Integer> {
+public class OrderService extends CrudService<Order> {
 
     protected OrderService() {
         super(Order.class);

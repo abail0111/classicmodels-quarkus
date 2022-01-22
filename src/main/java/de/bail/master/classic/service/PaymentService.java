@@ -1,12 +1,13 @@
 package de.bail.master.classic.service;
 
-import de.bail.master.classic.enities.Payment;
+import de.bail.master.classic.model.dto.PaymentDto;
+import de.bail.master.classic.model.enities.Payment;
 import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class PaymentService extends CrudService<Payment, Integer> {
+public class PaymentService extends CrudService<Payment> {
 
     protected PaymentService() {
         super(Payment.class);

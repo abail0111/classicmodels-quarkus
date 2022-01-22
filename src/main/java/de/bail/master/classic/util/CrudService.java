@@ -7,12 +7,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * Abstract super class for all services to provide methods for saving reading and deleting
- * @param <T>  Datatype of entity
- * @param <ID> Datatype of entity id
- */
-public abstract class CrudService<T extends GenericEntity, ID> {
+
+public abstract class CrudService<T extends GenericEntity> {
 
   @PersistenceContext()
   protected EntityManager em;
@@ -54,7 +50,7 @@ public abstract class CrudService<T extends GenericEntity, ID> {
     return entity;
   }
 
-  public T getEntityById(ID id) {
+  public T getEntityById(Integer id) {
     T entity = em.find(type, id);
     if (entity != null) {
       return entity;
@@ -84,7 +80,7 @@ public abstract class CrudService<T extends GenericEntity, ID> {
   }
 
   @Transactional
-  public void deleteById(ID id) {
+  public void deleteById(Integer id) {
     T entity = em.find(type, id);
     if (em.find(type, id) != null) {
       em.remove(entity);
