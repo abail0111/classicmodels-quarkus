@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @GraphQLApi
-public class OfficeGQLResource {
+public class OfficeOperations {
 
     @Inject
     public OfficeService service;

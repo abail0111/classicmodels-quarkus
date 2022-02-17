@@ -14,7 +14,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Customer.getAll", query = "select f from Customer f order by f.id asc")
 })
 // TODO @NamedEntityGraph(name = "salesRepEmployee", attributeNodes = @NamedAttributeNode("salesRepEmployee"))
-public class Customer extends GenericEntity implements Serializable {
+public class Customer extends GenericEntity implements Contact,  Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,12 @@ public class Customer extends GenericEntity implements Serializable {
   private String customerName;
 
   @NotNull
-  private String contactLastName;
+  @Column(name = "contactLastName")
+  private String lastName;
 
   @NotNull
-  private String contactFirstName;
+  @Column(name = "contactFirstName")
+  private String firstName;
 
   private String phone;
 
@@ -71,20 +73,20 @@ public class Customer extends GenericEntity implements Serializable {
     this.customerName = customerName;
   }
 
-  public String getContactLastName() {
-    return contactLastName;
+  public String getLastName() {
+    return lastName;
   }
 
-  public void setContactLastName(String contactLastName) {
-    this.contactLastName = contactLastName;
+  public void setLastName(String contactLastName) {
+    this.lastName = contactLastName;
   }
 
-  public String getContactFirstName() {
-    return contactFirstName;
+  public String getFirstName() {
+    return firstName;
   }
 
-  public void setContactFirstName(String contactFirstName) {
-    this.contactFirstName = contactFirstName;
+  public void setFirstName(String contactFirstName) {
+    this.firstName = contactFirstName;
   }
 
   public String getPhone() {

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @GraphQLApi
-public class CustomerGQLResource {
+public class CustomerOperations {
 
     @Inject
     public CustomerService service;

@@ -7,6 +7,9 @@ import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @ApplicationScoped
 public class CustomerService extends CrudService<Customer> {
@@ -31,6 +34,30 @@ public class CustomerService extends CrudService<Customer> {
             save(customer);
         }
         return customer;
+    }
+
+    public List<Customer> search(String term) {
+        if (term != null && !term.isEmpty() && !term.isBlank()) {
+            List<Customer> customers = new ArrayList<>();
+            String[] keywords = term.toLowerCase().split(" ");
+            for (Customer customer : getAllEntities()) {
+                boolean isMatch = false;
+                for (String keyword : keywords) {
+                    if (customer.getCustomerName().toLowerCase().contains(keyword) ||
+                            customer.getFirstName().toLowerCase().contains(keyword) ||
+                            customer.getLastName().toLowerCase().contains(keyword)) {
+                        isMatch = true;
+                    } else {
+                        isMatch = false;
+                    }
+                }
+                if (isMatch) {
+                    customers.add(customer);
+                }
+            }
+            return customers;
+        }
+        return Collections.emptyList();
     }
 
 }

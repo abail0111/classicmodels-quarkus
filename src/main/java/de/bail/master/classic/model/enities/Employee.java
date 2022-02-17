@@ -12,7 +12,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Employee.count", query = "select count(f) from Employee f"),
         @NamedQuery(name = "Employee.getAll", query = "select f from Employee f order by f.id asc")
 })
-public class Employee extends GenericEntity implements Serializable {
+public class Employee extends GenericEntity implements Contact, Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
