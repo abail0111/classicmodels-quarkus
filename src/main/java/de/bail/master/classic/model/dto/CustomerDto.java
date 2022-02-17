@@ -8,9 +8,9 @@ public class CustomerDto implements Serializable {
 
   private String customerName;
 
-  private String contactLastName;
+  private String lastname;
 
-  private String contactFirstName;
+  private String firstName;
 
   private String phone;
 
@@ -46,20 +46,20 @@ public class CustomerDto implements Serializable {
     this.customerName = customerName;
   }
 
-  public String getContactLastName() {
-    return contactLastName;
+  public String getLastname() {
+    return lastname;
   }
 
-  public void setContactLastName(String contactLastName) {
-    this.contactLastName = contactLastName;
+  public void setLastname(String lastname) {
+    this.lastname = lastname;
   }
 
-  public String getContactFirstName() {
-    return contactFirstName;
+  public String getFirstName() {
+    return firstName;
   }
 
-  public void setContactFirstName(String contactFirstName) {
-    this.contactFirstName = contactFirstName;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
   public String getPhone() {
