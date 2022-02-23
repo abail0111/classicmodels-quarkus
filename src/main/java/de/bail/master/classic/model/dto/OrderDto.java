@@ -1,17 +1,17 @@
 package de.bail.master.classic.model.dto;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class OrderDto implements Serializable {
 
   private Integer id;
 
-  private Timestamp orderDate;
+  private LocalDateTime orderDate;
 
-  private Timestamp requiredDate;
+  private LocalDateTime requiredDate;
 
-  private Timestamp shippedDate;
+  private LocalDateTime shippedDate;
 
   private String status;
 
@@ -27,27 +27,27 @@ public class OrderDto implements Serializable {
     this.id = id;
   }
 
-  public Timestamp getOrderDate() {
+  public LocalDateTime getOrderDate() {
     return orderDate;
   }
 
-  public void setOrderDate(Timestamp orderDate) {
+  public void setOrderDate(LocalDateTime orderDate) {
     this.orderDate = orderDate;
   }
 
-  public Timestamp getRequiredDate() {
+  public LocalDateTime getRequiredDate() {
     return requiredDate;
   }
 
-  public void setRequiredDate(Timestamp requiredDate) {
+  public void setRequiredDate(LocalDateTime requiredDate) {
     this.requiredDate = requiredDate;
   }
 
-  public Timestamp getShippedDate() {
+  public LocalDateTime getShippedDate() {
     return shippedDate;
   }
 
-  public void setShippedDate(Timestamp shippedDate) {
+  public void setShippedDate(LocalDateTime shippedDate) {
     this.shippedDate = shippedDate;
   }
 

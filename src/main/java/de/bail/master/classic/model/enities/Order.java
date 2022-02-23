@@ -5,7 +5,7 @@ import de.bail.master.classic.util.GenericEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -20,13 +20,11 @@ public class Order extends GenericEntity implements Serializable {
   @Column(name = "orderNumber")
   private Integer id;
 
-  @NotNull
-  private Timestamp orderDate;
+  private LocalDateTime orderDate;
 
-  @NotNull
-  private Timestamp requiredDate;
+  private LocalDateTime requiredDate;
 
-  private Timestamp shippedDate;
+  private LocalDateTime shippedDate;
 
   @NotNull
   private String status;
@@ -48,27 +46,27 @@ public class Order extends GenericEntity implements Serializable {
     this.id = orderNumber;
   }
 
-  public Timestamp getOrderDate() {
+  public LocalDateTime getOrderDate() {
     return orderDate;
   }
 
-  public void setOrderDate(Timestamp orderDate) {
+  public void setOrderDate(LocalDateTime orderDate) {
     this.orderDate = orderDate;
   }
 
-  public Timestamp getRequiredDate() {
+  public LocalDateTime getRequiredDate() {
     return requiredDate;
   }
 
-  public void setRequiredDate(Timestamp requiredDate) {
+  public void setRequiredDate(LocalDateTime requiredDate) {
     this.requiredDate = requiredDate;
   }
 
-  public Timestamp getShippedDate() {
+  public LocalDateTime getShippedDate() {
     return shippedDate;
   }
 
-  public void setShippedDate(Timestamp shippedDate) {
+  public void setShippedDate(LocalDateTime shippedDate) {
     this.shippedDate = shippedDate;
   }
 
