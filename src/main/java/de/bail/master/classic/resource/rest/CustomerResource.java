@@ -66,8 +66,10 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Custom
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read all Customers")
     @Override
-    public Response readAll() {
-        return super.readAll();
+    public Response readAllPagination(
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @QueryParam("limit") @DefaultValue("100") int limit) {
+        return super.readAllPagination(offset, limit);
     }
 
     @PUT

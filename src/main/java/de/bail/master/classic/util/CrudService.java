@@ -90,12 +90,6 @@ public abstract class CrudService<T extends GenericEntity> {
     }
   }
 
-//  @Transactional
-//  public List<T> getPage(Integer limit, Integer offset) {
-//    return em.createNamedQuery(type.getSimpleName() + ".getAll").setMaxResults(limit)
-//        .setFirstResult(offset).getResultList();
-//  }
-
   public Integer count() {
     return ((Number) em.createNamedQuery(type.getSimpleName() + ".count").getSingleResult())
         .intValue();
@@ -103,5 +97,12 @@ public abstract class CrudService<T extends GenericEntity> {
 
   public List<T> getAllEntities() {
     return em.createNamedQuery(type.getSimpleName() + ".getAll").getResultList();
+  }
+
+  public List<T> getAllEntitiesPagination(int offset, int limit) {
+    return em.createNamedQuery(type.getSimpleName() + ".getAll")
+            .setFirstResult(offset)
+            .setMaxResults(limit)
+            .getResultList();
   }
 }

@@ -38,15 +38,6 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
         return super.read(id);
     }
 
-    @GET
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "read all OrderDetails")
-    @Override
-    public Response readAll() {
-        return super.readAll();
-    }
-
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)

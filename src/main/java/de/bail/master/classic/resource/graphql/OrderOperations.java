@@ -21,8 +21,14 @@ public class OrderOperations {
 
     @Query("allOrders")
     @Description("Get all Orders")
-    public List<Order> getAllOrders() {
-        return service.getAllEntities();
+    public List<Order> getAllOrders(
+            @Name("offset") @DefaultValue("0") int offset,
+            @Name("limit") @DefaultValue("100") int limit,
+            @Name("status") String status) {
+        if (status != null && !status.isEmpty()) {
+            return service.filterByStatus(status, offset, limit);
+        }
+        return service.getAllEntitiesPagination(offset, limit);
     }
 
     @Mutation

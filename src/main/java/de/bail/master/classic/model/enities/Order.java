@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @NamedQueries({
         @NamedQuery(name = "Order.count", query = "select count(f) from Order f"),
-        @NamedQuery(name = "Order.getAll", query = "select f from Order f order by f.id asc")
+        @NamedQuery(name = "Order.getAll", query = "select f from Order f order by f.id asc"),
+        @NamedQuery(name = "Order.filterByStatus", query = "select f from Order f where f.status like :status order by f.id asc")
 })
 public class Order extends GenericEntity implements Serializable {
 

@@ -21,8 +21,10 @@ public class CustomerOperations {
 
     @Query("allCustomers")
     @Description("Get all Customers")
-    public List<Customer> getAllCustomers() {
-        return service.getAllEntities();
+    public List<Customer> getAllCustomers(
+            @Name("offset") @DefaultValue("0") int offset,
+            @Name("limit") @DefaultValue("100") int limit) {
+        return service.getAllEntitiesPagination(offset, limit);
     }
 
     @Mutation

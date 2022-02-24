@@ -18,13 +18,7 @@ public class OrderDetailOperations {
     public OrderDetail getOrderDetail(@Name("id") int id) {
         return service.getEntityById(id);
     }
-
-    @Query("allOrderDetails")
-    @Description("Get all OrderDetails")
-    public List<OrderDetail> getAllOrderDetails() {
-        return service.getAllEntities();
-    }
-
+    
     @Mutation
     public OrderDetail createOrderDetail(OrderDetail OrderDetail) {
         service.create(OrderDetail);

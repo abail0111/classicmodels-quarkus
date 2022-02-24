@@ -43,8 +43,10 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentSe
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read all Payments")
     @Override
-    public Response readAll() {
-        return super.readAll();
+    public Response readAllPagination(
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @QueryParam("limit") @DefaultValue("100") int limit) {
+        return super.readAllPagination(offset, limit);
     }
 
     @PUT

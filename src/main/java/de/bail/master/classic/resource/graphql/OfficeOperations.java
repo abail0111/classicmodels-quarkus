@@ -15,7 +15,7 @@ public class OfficeOperations {
 
     @Query("office")
     @Description("Get Office by id")
-    public Office getOffice(@Name("id") int id) {
+    public Office getOffice(@Name("id") String id) {
         return service.getEntityById(id);
     }
 
@@ -38,7 +38,7 @@ public class OfficeOperations {
     }
 
     @Mutation
-    public Office deleteOffice(int id) {
+    public Office deleteOffice(String id) {
         Office Office = service.getEntityById(id);
         service.deleteById(id);
         return Office; //TODO Do we need to return something here?

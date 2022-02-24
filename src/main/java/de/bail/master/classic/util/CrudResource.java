@@ -74,6 +74,21 @@ public abstract class CrudResource<T extends GenericEntity, K, S extends CrudSer
         return response;
     }
 
+    public Response readAllPagination(int offset, int limit) {
+        Response response;
+        try {
+            List<T> entities = service.getAllEntitiesPagination(offset, limit);
+            response = Response.ok(mapper.toResourceList(entities)).build();
+        } catch (EntityNotFoundException e) {
+            response = Response.status(Response.Status.NOT_FOUND).
+                    entity(e.getMessage()).build();
+        } catch (PersistenceException e) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        }
+        return response;
+    }
+
     public Response update(Integer id, K entity) {
         Response response;
         try {

@@ -21,8 +21,10 @@ public class EmployeeOperations {
 
     @Query("allEmployees")
     @Description("Get all Employees")
-    public List<Employee> getAllEmployees() {
-        return service.getAllEntities();
+    public List<Employee> getAllEmployees(
+            @Name("offset") @DefaultValue("0") int offset,
+            @Name("limit") @DefaultValue("100") int limit) {
+        return service.getAllEntitiesPagination(offset, limit);
     }
 
     @Mutation

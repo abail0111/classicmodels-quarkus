@@ -1,10 +1,11 @@
 package de.bail.master.classic.service;
 
-import de.bail.master.classic.model.dto.ProductDto;
 import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.util.CrudServiceStr;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.Query;
+import java.util.List;
 
 @ApplicationScoped
 public class ProductService extends CrudServiceStr<Product> {
@@ -16,6 +17,14 @@ public class ProductService extends CrudServiceStr<Product> {
     @Override
     public Product create(Product entity) {
         return null;
+    }
+
+    public List<Product> filterByProductLine(String productLine, int offset, int limit) {
+        Query query = em.createNamedQuery("Product.filterByProductLine");
+        query.setParameter("productLine", productLine);
+        query.setFirstResult(offset);
+        query.setMaxResults(limit);
+        return query.getResultList();
     }
 
 }

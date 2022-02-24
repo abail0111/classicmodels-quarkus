@@ -21,8 +21,14 @@ public class ProductOperations {
 
     @Query("allProducts")
     @Description("Get all Products")
-    public List<Product> getAllProducts() {
-        return service.getAllEntities();
+    public List<Product> getAllProducts(
+            @Name("offset") @DefaultValue("0") int offset,
+            @Name("limit") @DefaultValue("100") int limit,
+            @Name("productLine") String productLine) {
+        if (productLine != null && !productLine.isEmpty()) {
+            return service.filterByProductLine(productLine, offset, limit);
+        }
+        return service.getAllEntitiesPagination(offset, limit);
     }
 
     @Mutation

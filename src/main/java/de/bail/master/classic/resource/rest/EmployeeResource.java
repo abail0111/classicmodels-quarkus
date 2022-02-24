@@ -66,8 +66,10 @@ public class EmployeeResource extends CrudResource<Employee, EmployeeDto, Employ
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read all Employees")
     @Override
-    public Response readAll() {
-        return super.readAll();
+    public Response readAllPagination(
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @QueryParam("limit") @DefaultValue("100") int limit) {
+        return super.readAllPagination(offset, limit);
     }
 
     @PUT

@@ -7,10 +7,13 @@ import de.bail.master.classic.mapper.ProductMapper;
 import de.bail.master.classic.util.CrudResourceStr;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/product")
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,9 +45,27 @@ public class ProductResource extends CrudResourceStr<Product, ProductDto, Produc
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read all Products")
-    @Override
-    public Response readAll() {
-        return super.readAll();
+    public Response readAll(
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @QueryParam("limit") @DefaultValue("100") int limit,
+            @QueryParam("productLine") String productLine) {
+        Response response;
+        try {
+            List<Product> products;
+            if (productLine != null && !productLine.isEmpty()) {
+                products = service.filterByProductLine(productLine, offset, limit);
+            } else {
+                products = service.getAllEntitiesPagination(offset, limit);
+            }
+            response = Response.ok(mapper.toResourceList(products)).build();
+        } catch (EntityNotFoundException e) {
+            response = Response.status(Response.Status.NOT_FOUND).
+                    entity(e.getMessage()).build();
+        } catch (PersistenceException e) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        }
+        return response;
     }
 
     @PUT

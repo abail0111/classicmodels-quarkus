@@ -21,8 +21,10 @@ public class PaymentOperations {
 
     @Query("allPayments")
     @Description("Get all Payments")
-    public List<Payment> getAllPayments() {
-        return service.getAllEntities();
+    public List<Payment> getAllPayments(
+            @Name("offset") @DefaultValue("0") int offset,
+            @Name("limit") @DefaultValue("100") int limit) {
+        return service.getAllEntitiesPagination(offset, limit);
     }
 
     @Mutation

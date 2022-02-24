@@ -4,7 +4,7 @@ import de.bail.master.classic.model.dto.OfficeDto;
 import de.bail.master.classic.model.enities.Office;
 import de.bail.master.classic.service.OfficeService;
 import de.bail.master.classic.mapper.OfficeMapper;
-import de.bail.master.classic.util.CrudResource;
+import de.bail.master.classic.util.CrudResourceStr;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import javax.validation.Valid;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/office")
 @Produces(MediaType.APPLICATION_JSON)
-public class OfficeResource extends CrudResource<Office, OfficeDto, OfficeService, OfficeMapper> {
+public class OfficeResource extends CrudResourceStr<Office, OfficeDto, OfficeService, OfficeMapper> {
 
     public OfficeResource() {
         super("/office/");
@@ -34,7 +34,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, OfficeServic
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read Office")
     @Override
-    public Response read(@PathParam("id") Integer id) {
+    public Response read(@PathParam("id") String id) {
         return super.read(id);
     }
 
@@ -53,7 +53,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, OfficeServic
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Office")
     @Override
-    public Response update(@PathParam("id") Integer id, @Valid OfficeDto entity) {
+    public Response update(@PathParam("id") String id, @Valid OfficeDto entity) {
         return super.update(id, entity);
     }
 
@@ -61,7 +61,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, OfficeServic
     @Path("{id}")
     @Operation(summary = "delete Office")
     @Override
-    public Response delete(@PathParam("id") Integer id) {
+    public Response delete(@PathParam("id") String id) {
         return super.delete(id);
     }
 

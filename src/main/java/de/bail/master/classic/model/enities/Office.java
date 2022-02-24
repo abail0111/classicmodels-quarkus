@@ -1,7 +1,6 @@
 package de.bail.master.classic.model.enities;
 
-import de.bail.master.classic.util.GenericEntity;
-
+import de.bail.master.classic.util.GenericEntityStr;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,12 +11,12 @@ import java.io.Serializable;
         @NamedQuery(name = "Office.count", query = "select count(f) from Office f"),
         @NamedQuery(name = "Office.getAll", query = "select f from Office f")
 })
-public class Office extends GenericEntity implements Serializable {
+public class Office extends GenericEntityStr implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "officeCode")
-  private Integer id;
+  private String id;
 
   @NotNull
   private String city;
@@ -42,12 +41,12 @@ public class Office extends GenericEntity implements Serializable {
   private String territory;
 
   @Override
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
   @Override
-  public void setId(Integer officeCode) {
+  public void setId(String officeCode) {
     this.id = officeCode;
   }
 

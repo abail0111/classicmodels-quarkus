@@ -2,15 +2,19 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.OrderDto;
 import de.bail.master.classic.model.enities.Order;
+import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.service.OrderService;
 import de.bail.master.classic.mapper.OrderMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/order")
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,9 +46,27 @@ public class OrderResource extends CrudResource<Order, OrderDto, OrderService, O
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read all Orders")
-    @Override
-    public Response readAll() {
-        return super.readAll();
+    public Response readAll(
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @QueryParam("limit") @DefaultValue("100") int limit,
+            @QueryParam("status") String status) {
+        Response response;
+        try {
+            List<Order> products;
+            if (status != null && !status.isEmpty()) {
+                products = service.filterByStatus(status, offset, limit);
+            } else {
+                products = service.getAllEntitiesPagination(offset, limit);
+            }
+            response = Response.ok(mapper.toResourceList(products)).build();
+        } catch (EntityNotFoundException e) {
+            response = Response.status(Response.Status.NOT_FOUND).
+                    entity(e.getMessage()).build();
+        } catch (PersistenceException e) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
+                    entity(e.getMessage()).build();
+        }
+        return response;
     }
 
     @PUT
