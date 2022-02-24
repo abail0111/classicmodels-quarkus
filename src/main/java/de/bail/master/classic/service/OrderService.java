@@ -27,4 +27,10 @@ public class OrderService extends CrudService<Order> {
         return query.getResultList();
     }
 
+    public Integer countByFilter() {
+        return ((Number) em.createNamedQuery("Order.filterByStatus.count")
+                .getSingleResult())
+                .intValue();
+    }
+
 }

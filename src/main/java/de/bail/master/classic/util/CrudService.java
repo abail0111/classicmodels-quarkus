@@ -91,8 +91,9 @@ public abstract class CrudService<T extends GenericEntity> {
   }
 
   public Integer count() {
-    return ((Number) em.createNamedQuery(type.getSimpleName() + ".count").getSingleResult())
-        .intValue();
+    return ((Number) em.createNamedQuery(type.getSimpleName() + ".count")
+            .getSingleResult())
+            .intValue();
   }
 
   public List<T> getAllEntities() {

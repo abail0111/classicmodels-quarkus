@@ -53,12 +53,16 @@ public class OrderResource extends CrudResource<Order, OrderDto, OrderService, O
         Response response;
         try {
             List<Order> products;
+            int count;
             if (status != null && !status.isEmpty()) {
                 products = service.filterByStatus(status, offset, limit);
+                count = service.countByFilter();
             } else {
                 products = service.getAllEntitiesPagination(offset, limit);
+                count = service.count();
             }
-            response = Response.ok(mapper.toResourceList(products)).build();
+            response = Response.ok(mapper.toResourceList(products))
+                    .header("x-total-count", count).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();

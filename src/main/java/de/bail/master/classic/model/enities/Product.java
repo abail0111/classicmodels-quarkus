@@ -11,7 +11,8 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = "Product.count", query = "select count(f) from Product f"),
         @NamedQuery(name = "Product.getAll", query = "select f from Product f order by f.id asc"),
-        @NamedQuery(name = "Product.filterByProductLine", query = "select f from Product f where f.productLine.id like :productLine order by f.id asc")
+        @NamedQuery(name = "Product.filterByProductLine", query = "select f from Product f where f.productLine.id like :productLine order by f.id asc"),
+        @NamedQuery(name = "Product.filterByProductLine.count", query = "select count(f)  from Product f where f.productLine.id like :productLine")
 })
 public class Product extends GenericEntityStr implements Serializable {
 

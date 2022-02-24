@@ -78,7 +78,9 @@ public abstract class CrudResource<T extends GenericEntity, K, S extends CrudSer
         Response response;
         try {
             List<T> entities = service.getAllEntitiesPagination(offset, limit);
-            response = Response.ok(mapper.toResourceList(entities)).build();
+            int count = service.count();
+            response = Response.ok(mapper.toResourceList(entities))
+                    .header("x-total-count", count).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();

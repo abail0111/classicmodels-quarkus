@@ -52,12 +52,16 @@ public class ProductResource extends CrudResourceStr<Product, ProductDto, Produc
         Response response;
         try {
             List<Product> products;
+            int count;
             if (productLine != null && !productLine.isEmpty()) {
                 products = service.filterByProductLine(productLine, offset, limit);
+                count = service.countByFilter();
             } else {
                 products = service.getAllEntitiesPagination(offset, limit);
+                count = service.count();
             }
-            response = Response.ok(mapper.toResourceList(products)).build();
+            response = Response.ok(mapper.toResourceList(products))
+                    .header("x-total-count", count).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
