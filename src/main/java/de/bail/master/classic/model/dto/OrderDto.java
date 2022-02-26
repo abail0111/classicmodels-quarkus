@@ -17,7 +17,7 @@ public class OrderDto implements Serializable {
 
   private String comments;
 
-  private Integer customer;
+  private Link<Integer> customer;
 
   public Integer getId() {
     return id;
@@ -67,11 +67,11 @@ public class OrderDto implements Serializable {
     this.comments = comments;
   }
 
-  public Integer getCustomer() {
+  public Link<Integer> getCustomer() {
     return customer;
   }
 
-  public void setCustomer(Integer customer) {
+  public void setCustomer(Link<Integer> customer) {
     this.customer = customer;
   }
 }

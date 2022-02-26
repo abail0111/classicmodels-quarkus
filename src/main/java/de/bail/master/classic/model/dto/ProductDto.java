@@ -8,7 +8,7 @@ public class ProductDto implements Serializable {
 
   private String productName;
 
-  private String productLine;
+  private Link<String> productLine;
 
   private String productScale;
 
@@ -38,11 +38,11 @@ public class ProductDto implements Serializable {
     this.productName = productName;
   }
 
-  public String getProductLine() {
+  public Link<String> getProductLine() {
     return productLine;
   }
 
-  public void setProductLine(String productLine) {
+  public void setProductLine(Link<String> productLine) {
     this.productLine = productLine;
   }
 

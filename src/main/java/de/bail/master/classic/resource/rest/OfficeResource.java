@@ -20,6 +20,11 @@ public class OfficeResource extends CrudResourceStr<Office, OfficeDto, OfficeSer
         super("/office/");
     }
 
+    @Override
+    public void linkDTO(OfficeDto dto) {
+
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

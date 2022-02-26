@@ -27,6 +27,8 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, K, S extends C
         this.location = location;
     }
 
+    public abstract void linkDTO(K dto);
+
     public Response create(K entity) {
         Response response;
         try {
@@ -63,7 +65,9 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, K, S extends C
         Response response;
         try {
             List<T> entities = service.getAllEntities();
-            response = Response.ok(mapper.toResourceList(entities)).build();
+            List<K> dto = mapper.toResourceList(entities);
+            dto.forEach(this::linkDTO);
+            response = Response.ok(dto).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
@@ -78,8 +82,10 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, K, S extends C
         Response response;
         try {
             List<T> entities = service.getAllEntitiesPagination(offset, limit);
+            List<K> dto = mapper.toResourceList(entities);
+            dto.forEach(this::linkDTO);
             int count = service.count();
-            response = Response.ok(mapper.toResourceList(entities))
+            response = Response.ok(dto)
                     .header("x-total-count", count).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
@@ -97,9 +103,11 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, K, S extends C
             T updatedEntity = mapper.toEntity(entity);
             updatedEntity.setId(id);
             updatedEntity = service.update(updatedEntity);
+            K dto = mapper.toResource(updatedEntity);
+            linkDTO(dto);
             response = Response.status(Response.Status.OK)
                     .location(UriBuilder.fromUri(location + updatedEntity.getId()).build())
-                    .entity(mapper.toResource(updatedEntity)).build();
+                    .entity(dto).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();

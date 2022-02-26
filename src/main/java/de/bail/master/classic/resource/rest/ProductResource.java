@@ -2,15 +2,18 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.ProductDto;
 import de.bail.master.classic.model.enities.Product;
+import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.ProductService;
 import de.bail.master.classic.mapper.ProductMapper;
 import de.bail.master.classic.util.CrudResourceStr;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -19,8 +22,19 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductResource extends CrudResourceStr<Product, ProductDto, ProductService, ProductMapper> {
 
+    @Inject
+    LinkService linkService;
+
     public ProductResource() {
         super("/product/");
+    }
+
+    @Override
+    public void linkDTO(ProductDto dto) {
+        if (dto != null && dto.getProductLine() != null && dto.getProductLine().getId() != null) {
+            Link link = linkService.BuildLinkRelated("/productline/" + dto.getProductLine().getId(), MediaType.APPLICATION_JSON);
+            dto.getProductLine().setLink(link);
+        }
     }
 
     @POST
@@ -60,7 +74,9 @@ public class ProductResource extends CrudResourceStr<Product, ProductDto, Produc
                 products = service.getAllEntitiesPagination(offset, limit);
                 count = service.count();
             }
-            response = Response.ok(mapper.toResourceList(products))
+            List<ProductDto> dto = mapper.toResourceList(products);
+            dto.forEach(this::linkDTO);
+            response = Response.ok(dto)
                     .header("x-total-count", count).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).

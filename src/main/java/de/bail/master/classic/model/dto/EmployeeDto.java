@@ -14,9 +14,9 @@ public class EmployeeDto implements Serializable {
 
   private String email;
 
-  private Integer office;
+  private Link<String> office;
 
-  private Integer reportsTo;
+  private Link<Integer> reportsTo;
 
   private String jobTitle;
 
@@ -60,19 +60,19 @@ public class EmployeeDto implements Serializable {
     this.email = email;
   }
 
-  public Integer getOffice() {
+  public Link<String> getOffice() {
     return office;
   }
 
-  public void setOffice(Integer office) {
+  public void setOffice(Link<String> office) {
     this.office = office;
   }
 
-  public Integer getReportsTo() {
+  public Link<Integer> getReportsTo() {
     return reportsTo;
   }
 
-  public void setReportsTo(Integer reportsTo) {
+  public void setReportsTo(Link<Integer> reportsTo) {
     this.reportsTo = reportsTo;
   }
 

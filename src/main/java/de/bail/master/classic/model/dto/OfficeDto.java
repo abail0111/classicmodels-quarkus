@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class OfficeDto implements Serializable {
 
-  private Integer id;
+  private String id;
 
   private String city;
 
@@ -22,11 +22,11 @@ public class OfficeDto implements Serializable {
 
   private String territory;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer officeCode) {
+  public void setId(String officeCode) {
     this.id = officeCode;
   }
 

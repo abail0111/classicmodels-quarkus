@@ -26,7 +26,7 @@ public class CustomerDto implements Serializable {
 
   private String country;
 
-  private Integer salesRepEmployee;
+  private Link<Integer> salesRepEmployee;
 
   private Double creditLimit;
 
@@ -118,11 +118,11 @@ public class CustomerDto implements Serializable {
     this.country = country;
   }
 
-  public Integer getSalesRepEmployee() {
+  public Link<Integer> getSalesRepEmployee() {
     return salesRepEmployee;
   }
 
-  public void setSalesRepEmployee(Integer salesRepEmployee) {
+  public void setSalesRepEmployee(Link<Integer> salesRepEmployee) {
     this.salesRepEmployee = salesRepEmployee;
   }
 
@@ -133,4 +133,5 @@ public class CustomerDto implements Serializable {
   public void setCreditLimit(Double creditLimit) {
     this.creditLimit = creditLimit;
   }
+
 }

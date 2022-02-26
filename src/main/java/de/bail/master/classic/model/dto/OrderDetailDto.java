@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class OrderDetailDto implements Serializable {
 
-  private Integer order;
+  private Link<Integer> order;
 
-  private String product;
+  private Link<String> product;
 
   private Integer quantityOrdered;
 
@@ -14,19 +14,19 @@ public class OrderDetailDto implements Serializable {
 
   private Short orderLineNumber;
 
-  public Integer getOrder() {
+  public Link<Integer> getOrder() {
     return order;
   }
 
-  public void setOrder(Integer order) {
+  public void setOrder(Link<Integer> order) {
     this.order = order;
   }
 
-  public String getProduct() {
+  public Link<String> getProduct() {
     return product;
   }
 
-  public void setProduct(String product) {
+  public void setProduct(Link<String> product) {
     this.product = product;
   }
 

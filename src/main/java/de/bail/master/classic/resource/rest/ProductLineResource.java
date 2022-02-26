@@ -20,6 +20,11 @@ public class ProductLineResource extends CrudResourceStr<ProductLine, ProductLin
         super("/productline/");
     }
 
+    @Override
+    public void linkDTO(ProductLineDto dto) {
+
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

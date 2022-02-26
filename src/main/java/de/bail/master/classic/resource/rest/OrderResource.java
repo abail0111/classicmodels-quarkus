@@ -1,17 +1,21 @@
 package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.OrderDto;
+import de.bail.master.classic.model.dto.ProductDto;
 import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.model.enities.Product;
+import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.OrderService;
 import de.bail.master.classic.mapper.OrderMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -20,8 +24,19 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class OrderResource extends CrudResource<Order, OrderDto, OrderService, OrderMapper> {
 
+    @Inject
+    LinkService linkService;
+
     public OrderResource() {
         super("/order/");
+    }
+
+    @Override
+    public void linkDTO(OrderDto dto) {
+        if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != 0) {
+            Link link = linkService.BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
+            dto.getCustomer().setLink(link);
+        }
     }
 
     @POST
@@ -52,16 +67,18 @@ public class OrderResource extends CrudResource<Order, OrderDto, OrderService, O
             @QueryParam("status") String status) {
         Response response;
         try {
-            List<Order> products;
+            List<Order> orders;
             int count;
             if (status != null && !status.isEmpty()) {
-                products = service.filterByStatus(status, offset, limit);
+                orders = service.filterByStatus(status, offset, limit);
                 count = service.countByFilter();
             } else {
-                products = service.getAllEntitiesPagination(offset, limit);
+                orders = service.getAllEntitiesPagination(offset, limit);
                 count = service.count();
             }
-            response = Response.ok(mapper.toResourceList(products))
+            List<OrderDto> dto = mapper.toResourceList(orders);
+            dto.forEach(this::linkDTO);
+            response = Response.ok(dto)
                     .header("x-total-count", count).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
@@ -74,7 +91,7 @@ public class OrderResource extends CrudResource<Order, OrderDto, OrderService, O
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Order")
@@ -84,7 +101,7 @@ public class OrderResource extends CrudResource<Order, OrderDto, OrderService, O
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Operation(summary = "delete Order")
     @Override
     public Response delete(@PathParam("id") Integer id) {

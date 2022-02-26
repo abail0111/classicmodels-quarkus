@@ -8,11 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(config = MappingConfig.class)
 public interface ProductMapper extends GenericMapper<Product, ProductDto> {
 
-    @Mapping(target = "productLine", source = "productLine.id")
     @Override
     ProductDto toResource(Product entity);
 
-    @Mapping(target = "productLine.id", source = "productLine")
     @Override
     Product toEntity(ProductDto entity);
 }

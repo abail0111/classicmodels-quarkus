@@ -2,13 +2,16 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.PaymentDto;
 import de.bail.master.classic.model.enities.Payment;
+import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.PaymentService;
 import de.bail.master.classic.mapper.PaymentMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -16,8 +19,19 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentService, PaymentMapper> {
 
+    @Inject
+    LinkService linkService;
+
     public PaymentResource() {
         super("/payment/");
+    }
+
+    @Override
+    public void linkDTO(PaymentDto dto) {
+        if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != 0) {
+            Link link = linkService.BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
+            dto.getCustomer().setLink(link);
+        }
     }
 
     @POST
@@ -50,7 +64,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentSe
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Payment")
@@ -60,7 +74,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentSe
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Operation(summary = "delete Payment")
     @Override
     public Response delete(@PathParam("id") Integer id) {

@@ -2,13 +2,16 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.OrderDetailDto;
 import de.bail.master.classic.model.enities.OrderDetail;
+import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.OrderDetailService;
 import de.bail.master.classic.mapper.OrderDetailMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -16,8 +19,23 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDto, OrderDetailService, OrderDetailMapper> {
 
+    @Inject
+    LinkService linkService;
+
     public OrderDetailResource() {
         super("/orderdetail/");
+    }
+
+    @Override
+    public void linkDTO(OrderDetailDto dto) {
+        if (dto != null && dto.getOrder() != null && dto.getOrder().getId() != 0) {
+            Link link = linkService.BuildLinkRelated("/order/" + dto.getOrder().getId(), MediaType.APPLICATION_JSON);
+            dto.getOrder().setLink(link);
+        }
+        if (dto != null && dto.getProduct() != null && dto.getProduct().getId() != null) {
+            Link link = linkService.BuildLinkRelated("/product/" + dto.getProduct().getId(), MediaType.APPLICATION_JSON);
+            dto.getProduct().setLink(link);
+        }
     }
 
     @POST
@@ -39,7 +57,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update OrderDetail")
@@ -49,7 +67,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Operation(summary = "delete OrderDetail")
     @Override
     public Response delete(@PathParam("id") Integer id) {

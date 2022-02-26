@@ -1,26 +1,43 @@
 package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.EmployeeDto;
-import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.model.enities.Employee;
 import de.bail.master.classic.service.EmployeeService;
 import de.bail.master.classic.mapper.EmployeeMapper;
+import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.util.CrudResource;
 import de.bail.master.classic.util.VCard;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/employee")
 public class EmployeeResource extends CrudResource<Employee, EmployeeDto, EmployeeService, EmployeeMapper> {
 
+    @Inject
+    LinkService linkService;
+
     public EmployeeResource() {
         super("/employee/");
+    }
+
+    @Override
+    public void linkDTO(EmployeeDto dto) {
+        if (dto != null && dto.getReportsTo() != null && dto.getReportsTo().getId() != 0) {
+            Link link = linkService.BuildLinkRelated("/employee/" + dto.getReportsTo().getId(), MediaType.APPLICATION_JSON);
+            dto.getReportsTo().setLink(link);
+        }
+        if (dto != null && dto.getOffice() != null && dto.getOffice().getId() != null) {
+            Link link = linkService.BuildLinkRelated("/office/" + dto.getOffice().getId(), MediaType.APPLICATION_JSON);
+            dto.getOffice().setLink(link);
+        }
     }
 
     @POST
@@ -73,7 +90,7 @@ public class EmployeeResource extends CrudResource<Employee, EmployeeDto, Employ
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Employee")
@@ -83,7 +100,7 @@ public class EmployeeResource extends CrudResource<Employee, EmployeeDto, Employ
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "delete Employee")
     @Override

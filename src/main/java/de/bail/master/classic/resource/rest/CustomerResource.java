@@ -4,23 +4,36 @@ import de.bail.master.classic.model.dto.CustomerDto;
 import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.service.CustomerService;
 import de.bail.master.classic.mapper.CustomerMapper;
+import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.util.CrudResource;
 import de.bail.master.classic.util.VCard;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @Path("/customer")
 public class CustomerResource extends CrudResource<Customer, CustomerDto, CustomerService, CustomerMapper> {
 
+    @Inject
+    LinkService linkService;
+
     public CustomerResource() {
         super("/customer/");
+    }
+
+    @Override
+    public void linkDTO(CustomerDto dto) {
+        if (dto != null && dto.getSalesRepEmployee() != null && dto.getSalesRepEmployee().getId() != 0) {
+            Link link = linkService.BuildLinkRelated("/employee/" + dto.getSalesRepEmployee().getId(), MediaType.APPLICATION_JSON);
+            dto.getSalesRepEmployee().setLink(link);
+        }
     }
 
     @POST
