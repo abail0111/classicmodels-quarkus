@@ -50,7 +50,9 @@ public abstract class CrudResourceStr<T extends GenericEntityStr, K, S extends C
         Response response;
         try {
             T entity = service.getEntityById(id);
-            response = Response.ok(mapper.toResource(entity)).build();
+            K dto = mapper.toResource(entity);
+            linkDTO(dto);
+            response = Response.ok(dto).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
                     entity(e.getMessage()).build();
