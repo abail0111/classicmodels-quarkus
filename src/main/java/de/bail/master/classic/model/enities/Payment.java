@@ -1,5 +1,6 @@
 package de.bail.master.classic.model.enities;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -10,15 +11,19 @@ import java.util.Objects;
 @Table(name = "payments")
 @NamedQueries({
         @NamedQuery(name = "Payment.count", query = "select count(f) from Payment f"),
-        @NamedQuery(name = "Payment.getAll", query = "select f from Payment f order by f.customerNumber asc")
+        @NamedQuery(name = "Payment.getAll", query = "select f from Payment f order by f.customerNumber asc"),
+        @NamedQuery(name = "Payment.getAllByCustomer", query = "select f from Payment f where f.customerNumber = :customer order by f.checkNumber asc"),
+        @NamedQuery(name = "Payment.getAllByCustomer.count", query = "select count(f) from Payment f where f.customerNumber = :customer")
 })
 @IdClass(Payment.PaymentId.class)
 public class Payment implements GenericEntity, Serializable {
 
   @Id
+  @JsonbTransient
   private Integer customerNumber;
 
   @Id
+  @JsonbTransient
   private String checkNumber;
 
   @NotNull

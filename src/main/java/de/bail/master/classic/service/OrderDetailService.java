@@ -4,9 +4,11 @@ import de.bail.master.classic.model.enities.OrderDetail;
 import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.Query;
+import java.util.List;
 
 @ApplicationScoped
-public class OrderDetailService extends CrudService<OrderDetail, Integer> {
+public class OrderDetailService extends CrudService<OrderDetail, OrderDetail.OrderDetailId> {
 
     protected OrderDetailService() {
         super(OrderDetail.class);
@@ -17,4 +19,18 @@ public class OrderDetailService extends CrudService<OrderDetail, Integer> {
         return null;
     }
 
+    public List<OrderDetail> getAllByOrder(Integer orderNumber, int offset, int limit) {
+        Query query = em.createNamedQuery("OrderDetail.getAllByOrder");
+        query.setParameter("orderNumber", orderNumber);
+        query.setFirstResult(offset);
+        query.setMaxResults(limit);
+        return query.getResultList();
+    }
+
+    public int getAllByOrderCount(Integer orderNumber) {
+        return ((Number) em.createNamedQuery("OrderDetail.getAllByOrder.count")
+                .setParameter("orderNumber", orderNumber)
+                .getSingleResult())
+                .intValue();
+    }
 }

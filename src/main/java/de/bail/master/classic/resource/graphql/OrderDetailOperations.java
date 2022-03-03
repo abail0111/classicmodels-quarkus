@@ -6,6 +6,7 @@ import de.bail.master.classic.service.OrderDetailService;
 import org.eclipse.microprofile.graphql.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @GraphQLApi
 public class OrderDetailOperations {
@@ -13,13 +14,8 @@ public class OrderDetailOperations {
     @Inject
     public OrderDetailService service;
 
-//    @Query("orderDetail")
-//    @Description("Get OrderDetail by id")
-//    public OrderDetail getOrderDetail(@Name("id") int id) {
-//        return service.getEntityById(id);
-//    }
-
-    public OrderDetail details(@Source Order order) {
+    public List<OrderDetail> details(@Source Order order, @Name("limit") @DefaultValue("100") int limit) {
+        service.getAllByOrder(order.getId(), 0, limit);
         return null;
     }
     
@@ -36,9 +32,9 @@ public class OrderDetailOperations {
     }
 
     @Mutation
-    public OrderDetail deleteOrderDetail(int id) {
-        OrderDetail OrderDetail = service.getEntityById(id);
-        service.deleteById(id);
+    public OrderDetail deleteOrderDetail(int order, String product) {
+        OrderDetail OrderDetail = service.getEntityById(new OrderDetail.OrderDetailId(order, product));
+        service.deleteById(new OrderDetail.OrderDetailId(order, product));
         return OrderDetail; //TODO Do we need to return something here?
     }
 }

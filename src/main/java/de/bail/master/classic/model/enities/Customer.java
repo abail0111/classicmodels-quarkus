@@ -9,7 +9,8 @@ import java.io.Serializable;
 @Table(name = "customers")
 @NamedQueries({
         @NamedQuery(name = "Customer.count", query = "select count(f) from Customer f"),
-        @NamedQuery(name = "Customer.getAll", query = "select f from Customer f order by f.id asc")
+        @NamedQuery(name = "Customer.getAll", query = "select f from Customer f order by f.id asc"),
+        @NamedQuery(name = "Customer.getAllJoinOrder", query = "select f from Customer f order by f.id asc")
 })
 // TODO @NamedEntityGraph(name = "salesRepEmployee", attributeNodes = @NamedAttributeNode("salesRepEmployee"))
 public class Customer implements Contact, GenericEntity,  Serializable {

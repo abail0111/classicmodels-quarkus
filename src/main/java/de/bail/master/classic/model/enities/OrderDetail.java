@@ -3,22 +3,25 @@ package de.bail.master.classic.model.enities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "orderdetails")
 @NamedQueries({
         @NamedQuery(name = "OrderDetail.count", query = "select count(f) from OrderDetail f"),
-        @NamedQuery(name = "OrderDetail.getAll", query = "select f from OrderDetail f order by f.order.id asc")
+        @NamedQuery(name = "OrderDetail.getAll", query = "select f from OrderDetail f order by f.orderNumber asc"),
+        @NamedQuery(name = "OrderDetail.getAllByOrder", query = "select f from OrderDetail f where f.orderNumber = :orderNumber order by f.product.id asc"),
+        @NamedQuery(name = "OrderDetail.getAllByOrder.count", query = "select count(f) from OrderDetail f where f.orderNumber = :orderNumber")
 })
+@IdClass(OrderDetail.OrderDetailId.class)
 public class OrderDetail implements GenericEntity, Serializable {
 
   @Id
-  @ManyToOne
   @JoinColumn(name = "orderNumber", nullable = false)
-  private Order order;
+  private Integer orderNumber;
 
   @Id
-  @ManyToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "productCode", nullable = false)
   private Product product;
 
@@ -31,14 +34,6 @@ public class OrderDetail implements GenericEntity, Serializable {
   @NotNull
   private Short orderLineNumber;
 
-  public Integer getId() {
-    return order.getId();
-  }
-
-  public void setId(Integer id) {
-    order.setId(id);
-  }
-
   @Override
   public int hashCode() {
     return super.hashCode();
@@ -49,12 +44,12 @@ public class OrderDetail implements GenericEntity, Serializable {
     return super.equals(obj);
   }
 
-  public Order getOrder() {
-    return order;
+  public Integer getOrder() {
+    return orderNumber;
   }
 
-  public void setOrder(Order orderNumber) {
-    this.order = orderNumber;
+  public void setOrder(Integer orderNumber) {
+    this.orderNumber = orderNumber;
   }
 
   public Product getProduct() {
@@ -91,6 +86,65 @@ public class OrderDetail implements GenericEntity, Serializable {
 
   @Override
   public String idToString() {
-    return null;
+    return orderNumber + "/" + product.getId();
+  }
+
+  /**
+   * Composite ID Class
+   */
+  public static class OrderDetailId implements Serializable {
+
+    @JoinColumn(name = "orderNumber", nullable = false)
+    private Integer orderNumber;
+
+    private Product product;
+
+    public OrderDetailId() {
+    }
+
+    public OrderDetailId(Integer orderNumber, Product product) {
+      this.orderNumber = orderNumber;
+      this.product = product;
+    }
+
+    public OrderDetailId(Integer orderNumber, String product) {
+      this.orderNumber = orderNumber;
+      this.product = new Product();
+      this.product.setId(product);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(orderNumber, product);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null || getClass() != obj.getClass()) {
+        return false;
+      }
+      OrderDetailId pk = (OrderDetailId) obj;
+      return Objects.equals(orderNumber, pk.orderNumber) &&
+              Objects.equals(product, pk.product);
+    }
+
+    public Integer getOrder() {
+      return orderNumber;
+    }
+
+    public void setOrder(Integer orderNumber) {
+      this.orderNumber = orderNumber;
+    }
+
+    public Product getProduct() {
+      return product;
+    }
+
+    public void setProduct(Product product) {
+      this.product = product;
+    }
   }
 }
