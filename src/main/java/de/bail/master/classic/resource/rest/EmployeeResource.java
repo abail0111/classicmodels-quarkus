@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/employee")
-public class EmployeeResource extends CrudResource<Employee, EmployeeDto, EmployeeService, EmployeeMapper> {
+public class EmployeeResource extends CrudResource<Employee, EmployeeDto, Integer, EmployeeService, EmployeeMapper> {
 
     @Inject
     LinkService linkService;

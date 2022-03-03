@@ -4,7 +4,7 @@ import de.bail.master.classic.model.dto.OfficeDto;
 import de.bail.master.classic.model.enities.Office;
 import de.bail.master.classic.service.OfficeService;
 import de.bail.master.classic.mapper.OfficeMapper;
-import de.bail.master.classic.util.CrudResourceStr;
+import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import javax.validation.Valid;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/office")
 @Produces(MediaType.APPLICATION_JSON)
-public class OfficeResource extends CrudResourceStr<Office, OfficeDto, OfficeService, OfficeMapper> {
+public class OfficeResource extends CrudResource<Office, OfficeDto, String, OfficeService, OfficeMapper> {
 
     public OfficeResource() {
         super("/office/");

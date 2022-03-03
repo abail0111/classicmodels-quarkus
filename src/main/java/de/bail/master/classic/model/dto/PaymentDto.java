@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 public class PaymentDto implements Serializable {
 
-  private Link<Integer> customer;
+  private Integer customerNumber;
 
   private String checkNumber;
 
@@ -13,12 +13,12 @@ public class PaymentDto implements Serializable {
 
   private Double amount;
 
-  public Link<Integer> getCustomer() {
-    return customer;
+  public Integer getCustomerNumber() {
+    return customerNumber;
   }
 
-  public void setCustomer(Link<Integer> customer) {
-    this.customer = customer;
+  public void setCustomerNumber(Integer customerNumber) {
+    this.customerNumber = customerNumber;
   }
 
   public String getCheckNumber() {

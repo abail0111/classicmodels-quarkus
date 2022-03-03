@@ -4,7 +4,7 @@ import de.bail.master.classic.model.dto.ProductLineDto;
 import de.bail.master.classic.model.enities.ProductLine;
 import de.bail.master.classic.service.ProductLineService;
 import de.bail.master.classic.mapper.ProductLineMapper;
-import de.bail.master.classic.util.CrudResourceStr;
+import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import javax.validation.Valid;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/productline")
 @Produces(MediaType.APPLICATION_JSON)
-public class ProductLineResource extends CrudResourceStr<ProductLine, ProductLineDto, ProductLineService, ProductLineMapper> {
+public class ProductLineResource extends CrudResource<ProductLine, ProductLineDto, String, ProductLineService, ProductLineMapper> {
 
     public ProductLineResource() {
         super("/productline/");

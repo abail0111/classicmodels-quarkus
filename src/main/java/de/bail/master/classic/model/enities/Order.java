@@ -1,7 +1,5 @@
 package de.bail.master.classic.model.enities;
 
-import de.bail.master.classic.util.GenericEntity;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
         @NamedQuery(name = "Order.filterByStatus", query = "select f from Order f where f.status like :status order by f.id asc"),
         @NamedQuery(name = "Order.filterByStatus.count", query = "select count(f) from Order f where f.status like :status")
 })
-public class Order extends GenericEntity implements Serializable {
+public class Order implements GenericEntity, Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +36,10 @@ public class Order extends GenericEntity implements Serializable {
   @JoinColumn(name = "customerNumber")
   private Customer customer;
 
-  @Override
   public Integer getId() {
     return id;
   }
 
-  @Override
   public void setId(Integer orderNumber) {
     this.id = orderNumber;
   }
@@ -94,5 +90,10 @@ public class Order extends GenericEntity implements Serializable {
 
   public void setCustomer(Customer customerNumber) {
     this.customer = customerNumber;
+  }
+
+  @Override
+  public String idToString() {
+    return String.valueOf(id);
   }
 }

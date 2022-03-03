@@ -1,7 +1,5 @@
 package de.bail.master.classic.service;
 
-import de.bail.master.classic.model.dto.EmployeeDto;
-import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.model.enities.Employee;
 import de.bail.master.classic.util.CrudService;
 
@@ -12,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ApplicationScoped
-public class EmployeeService extends CrudService<Employee> {
+public class EmployeeService extends CrudService<Employee, Integer> {
 
     @Inject
     OfficeService officeService;

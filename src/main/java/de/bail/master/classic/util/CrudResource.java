@@ -1,6 +1,7 @@
 package de.bail.master.classic.util;
 
 import de.bail.master.classic.mapper.GenericMapper;
+import de.bail.master.classic.model.enities.GenericEntity;
 
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
@@ -9,7 +10,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
-public abstract class CrudResource<T extends GenericEntity, K, S extends CrudService<T>, M extends GenericMapper<T, K>> {
+public abstract class CrudResource<T extends GenericEntity, K, ID, S extends CrudService<T, ID>, M extends GenericMapper<T, K>> {
 
     @Inject
     public S service;
@@ -34,7 +35,7 @@ public abstract class CrudResource<T extends GenericEntity, K, S extends CrudSer
         try {
             T newEntity = service.create(mapper.toEntity(entity));
             response = Response.status(Response.Status.CREATED)
-                    .location(UriBuilder.fromUri(location + newEntity.getId()).build())
+                    .location(UriBuilder.fromUri(location + newEntity.idToString()).build())
                     .entity(mapper.toResource(newEntity)).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
@@ -46,7 +47,7 @@ public abstract class CrudResource<T extends GenericEntity, K, S extends CrudSer
         return response;
     }
 
-    public Response read(Integer id) {
+    public Response read(ID id) {
         Response response;
         try {
             T entity = service.getEntityById(id);
@@ -99,16 +100,15 @@ public abstract class CrudResource<T extends GenericEntity, K, S extends CrudSer
         return response;
     }
 
-    public Response update(Integer id, K entity) {
+    public Response update(ID id, K entity) {
         Response response;
         try {
             T updatedEntity = mapper.toEntity(entity);
-            updatedEntity.setId(id);
             updatedEntity = service.update(updatedEntity);
             K dto = mapper.toResource(updatedEntity);
             linkDTO(dto);
             response = Response.status(Response.Status.OK)
-                    .location(UriBuilder.fromUri(location + updatedEntity.getId()).build())
+                    .location(UriBuilder.fromUri(location + updatedEntity.idToString()).build())
                     .entity(dto).build();
         } catch (EntityNotFoundException e) {
             response = Response.status(Response.Status.NOT_FOUND).
@@ -120,7 +120,7 @@ public abstract class CrudResource<T extends GenericEntity, K, S extends CrudSer
         return response;
     }
 
-    public Response delete(Integer id) {
+    public Response delete(ID id) {
         Response response;
         try {
             service.deleteById(id);

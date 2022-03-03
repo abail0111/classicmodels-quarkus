@@ -1,7 +1,5 @@
 package de.bail.master.classic.model.enities;
 
-import de.bail.master.classic.util.GenericEntityStr;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,7 +9,7 @@ import java.io.Serializable;
         @NamedQuery(name = "ProductLine.count", query = "select count(f) from ProductLine f"),
         @NamedQuery(name = "ProductLine.getAll", query = "select f from ProductLine f order by f.id asc")
 })
-public class ProductLine extends GenericEntityStr implements Serializable {
+public class ProductLine implements GenericEntity, Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,4 +58,8 @@ public class ProductLine extends GenericEntityStr implements Serializable {
     this.image = image;
   }
 
+  @Override
+  public String idToString() {
+    return id;
+  }
 }

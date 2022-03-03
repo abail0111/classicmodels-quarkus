@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ApplicationScoped
-public class CustomerService extends CrudService<Customer> {
+public class CustomerService extends CrudService<Customer, Integer> {
 
     @Inject
     EmployeeService employeeService;

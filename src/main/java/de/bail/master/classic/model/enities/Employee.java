@@ -1,7 +1,5 @@
 package de.bail.master.classic.model.enities;
 
-import de.bail.master.classic.util.GenericEntity;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,7 +10,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Employee.count", query = "select count(f) from Employee f"),
         @NamedQuery(name = "Employee.getAll", query = "select f from Employee f order by f.id asc")
 })
-public class Employee extends GenericEntity implements Contact, Serializable {
+public class Employee implements Contact, GenericEntity, Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,12 +40,10 @@ public class Employee extends GenericEntity implements Contact, Serializable {
   @NotNull
   private String jobTitle;
 
-  @Override
   public Integer getId() {
     return id;
   }
 
-  @Override
   public void setId(Integer id) {
     this.id = id;
   }
@@ -106,5 +102,10 @@ public class Employee extends GenericEntity implements Contact, Serializable {
 
   public void setJobTitle(String jobTitle) {
     this.jobTitle = jobTitle;
+  }
+
+  @Override
+  public String idToString() {
+    return String.valueOf(id);
   }
 }

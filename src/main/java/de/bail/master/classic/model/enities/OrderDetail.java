@@ -1,7 +1,5 @@
 package de.bail.master.classic.model.enities;
 
-import de.bail.master.classic.util.GenericEntity;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,7 +10,7 @@ import java.io.Serializable;
         @NamedQuery(name = "OrderDetail.count", query = "select count(f) from OrderDetail f"),
         @NamedQuery(name = "OrderDetail.getAll", query = "select f from OrderDetail f order by f.order.id asc")
 })
-public class OrderDetail extends GenericEntity implements Serializable {
+public class OrderDetail implements GenericEntity, Serializable {
 
   @Id
   @ManyToOne
@@ -33,12 +31,10 @@ public class OrderDetail extends GenericEntity implements Serializable {
   @NotNull
   private Short orderLineNumber;
 
-  @Override
   public Integer getId() {
     return order.getId();
   }
 
-  @Override
   public void setId(Integer id) {
     order.setId(id);
   }
@@ -91,5 +87,10 @@ public class OrderDetail extends GenericEntity implements Serializable {
 
   public void setOrderLineNumber(Short orderLineNumber) {
     this.orderLineNumber = orderLineNumber;
+  }
+
+  @Override
+  public String idToString() {
+    return null;
   }
 }

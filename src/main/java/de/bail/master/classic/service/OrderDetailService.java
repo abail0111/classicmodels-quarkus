@@ -6,7 +6,7 @@ import de.bail.master.classic.util.CrudService;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class OrderDetailService extends CrudService<OrderDetail> {
+public class OrderDetailService extends CrudService<OrderDetail, Integer> {
 
     protected OrderDetailService() {
         super(OrderDetail.class);

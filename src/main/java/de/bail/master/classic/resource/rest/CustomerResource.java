@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/customer")
-public class CustomerResource extends CrudResource<Customer, CustomerDto, CustomerService, CustomerMapper> {
+public class CustomerResource extends CrudResource<Customer, CustomerDto, Integer, CustomerService, CustomerMapper> {
 
     @Inject
     LinkService linkService;

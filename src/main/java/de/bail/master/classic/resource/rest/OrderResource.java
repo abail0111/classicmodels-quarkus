@@ -22,7 +22,7 @@ import java.util.List;
 
 @Path("/order")
 @Produces(MediaType.APPLICATION_JSON)
-public class OrderResource extends CrudResource<Order, OrderDto, OrderService, OrderMapper> {
+public class OrderResource extends CrudResource<Order, OrderDto, Integer, OrderService, OrderMapper> {
 
     @Inject
     LinkService linkService;

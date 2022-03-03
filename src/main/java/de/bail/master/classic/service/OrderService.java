@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 @ApplicationScoped
-public class OrderService extends CrudService<Order> {
+public class OrderService extends CrudService<Order, Integer> {
 
     protected OrderService() {
         super(Order.class);

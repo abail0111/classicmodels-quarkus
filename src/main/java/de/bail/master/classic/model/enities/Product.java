@@ -1,7 +1,5 @@
 package de.bail.master.classic.model.enities;
 
-import de.bail.master.classic.util.GenericEntityStr;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,7 +12,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Product.filterByProductLine", query = "select f from Product f where f.productLine.id like :productLine order by f.id asc"),
         @NamedQuery(name = "Product.filterByProductLine.count", query = "select count(f)  from Product f where f.productLine.id like :productLine")
 })
-public class Product extends GenericEntityStr implements Serializable {
+public class Product implements GenericEntity, Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -116,5 +114,10 @@ public class Product extends GenericEntityStr implements Serializable {
 
   public void setMsrp(Double msrp) {
     this.msrp = msrp;
+  }
+
+  @Override
+  public String idToString() {
+    return id;
   }
 }

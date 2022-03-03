@@ -1,5 +1,7 @@
 package de.bail.master.classic.util;
 
+import de.bail.master.classic.model.enities.GenericEntity;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -8,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 
-public abstract class CrudService<T extends GenericEntity> {
+public abstract class CrudService<T extends GenericEntity, ID> {
 
   @PersistenceContext()
   protected EntityManager em;
@@ -42,15 +44,11 @@ public abstract class CrudService<T extends GenericEntity> {
 
   @Transactional
   public T update(T entity) {
-    if (entity.getId() != null && em.find(type, entity.getId()) != null) {
-      merge(entity);
-    } else {
-      throw new EntityNotFoundException();
-    }
+    merge(entity);
     return entity;
   }
 
-  public T getEntityById(Integer id) {
+  public T getEntityById(ID id) {
     T entity = em.find(type, id);
     if (entity != null) {
       return entity;
@@ -61,11 +59,7 @@ public abstract class CrudService<T extends GenericEntity> {
 
   @Transactional
   public T save(@Valid T entity) {
-    if (entity.getId() != null) {
-      merge(entity);
-    } else {
-      persist(entity);
-    }
+    persist(entity);
     return entity;
   }
 
@@ -75,12 +69,12 @@ public abstract class CrudService<T extends GenericEntity> {
       em.remove(entity);
       em.flush();
     } else {
-      throw new EntityNotFoundException(String.format("Couldn't find %s with id %s", type.getSimpleName(), entity.getId()));
+      throw new EntityNotFoundException();
     }
   }
 
   @Transactional
-  public void deleteById(Integer id) {
+  public void deleteById(ID id) {
     T entity = em.find(type, id);
     if (em.find(type, id) != null) {
       em.remove(entity);

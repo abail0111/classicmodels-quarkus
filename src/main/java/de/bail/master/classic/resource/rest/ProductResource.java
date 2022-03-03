@@ -5,7 +5,7 @@ import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.ProductService;
 import de.bail.master.classic.mapper.ProductMapper;
-import de.bail.master.classic.util.CrudResourceStr;
+import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Path("/product")
 @Produces(MediaType.APPLICATION_JSON)
-public class ProductResource extends CrudResourceStr<Product, ProductDto, ProductService, ProductMapper> {
+public class ProductResource extends CrudResource<Product, ProductDto, String, ProductService, ProductMapper> {
 
     @Inject
     LinkService linkService;

@@ -15,8 +15,8 @@ public class PaymentOperations {
 
     @Query("payment")
     @Description("Get Payment by id")
-    public Payment getPayment(@Name("id") int id) {
-        return service.getEntityById(id);
+    public Payment getPayment(@Name("customerNumber") int customerNumber, @Name("checkNumber") String checkNumber) {
+        return service.getEntityById(new Payment.PaymentId(customerNumber, checkNumber));
     }
 
     @Query("allPayments")
@@ -40,9 +40,9 @@ public class PaymentOperations {
     }
 
     @Mutation
-    public Payment deletePayment(int id) {
-        Payment Payment = service.getEntityById(id);
-        service.deleteById(id);
+    public Payment deletePayment(int customerNumber, String checkNumber) {
+        Payment Payment = service.getEntityById(new Payment.PaymentId(customerNumber, checkNumber));
+        service.deleteById(new Payment.PaymentId(customerNumber, checkNumber));
         return Payment; //TODO Do we need to return something here?
     }
 }

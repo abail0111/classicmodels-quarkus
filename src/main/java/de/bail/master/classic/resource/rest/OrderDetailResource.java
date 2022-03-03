@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/orderdetail")
 @Produces(MediaType.APPLICATION_JSON)
-public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDto, OrderDetailService, OrderDetailMapper> {
+public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDto, Integer, OrderDetailService, OrderDetailMapper> {
 
     @Inject
     LinkService linkService;

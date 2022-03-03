@@ -1,12 +1,12 @@
 package de.bail.master.classic.service;
 
 import de.bail.master.classic.model.enities.Office;
-import de.bail.master.classic.util.CrudServiceStr;
+import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class OfficeService extends CrudServiceStr<Office> {
+public class OfficeService extends CrudService<Office, String> {
 
     protected OfficeService() {
         super(Office.class);

@@ -2,25 +2,19 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.PaymentDto;
 import de.bail.master.classic.model.enities.Payment;
-import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.PaymentService;
 import de.bail.master.classic.mapper.PaymentMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/payment")
 @Produces(MediaType.APPLICATION_JSON)
-public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentService, PaymentMapper> {
-
-    @Inject
-    LinkService linkService;
+public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.PaymentId, PaymentService, PaymentMapper> {
 
     public PaymentResource() {
         super("/payment/");
@@ -28,10 +22,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentSe
 
     @Override
     public void linkDTO(PaymentDto dto) {
-        if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != 0) {
-            Link link = linkService.BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
-            dto.getCustomer().setLink(link);
-        }
+
     }
 
     @POST
@@ -44,12 +35,12 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentSe
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{customerNumber}/{checkNumber}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read Payment")
-    @Override
-    public Response read(@PathParam("id") Integer id) {
-        return super.read(id);
+    public Response read(@PathParam("customerNumber") Integer customerNumber,
+                         @PathParam("checkNumber") String checkNumber) {
+        return super.read(new Payment.PaymentId(customerNumber, checkNumber));
     }
 
     @GET
@@ -64,21 +55,22 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, PaymentSe
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("/{customerNumber}/{checkNumber}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Payment")
-    @Override
-    public Response update(@PathParam("id") Integer id, @Valid PaymentDto entity) {
-        return super.update(id, entity);
+    public Response update(@PathParam("customerNumber") Integer customerNumber,
+                           @PathParam("checkNumber") String checkNumber,
+                           @Valid PaymentDto entity) {
+        return super.update(new Payment.PaymentId(customerNumber, checkNumber), entity);
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{customerNumber}/{checkNumber}")
     @Operation(summary = "delete Payment")
-    @Override
-    public Response delete(@PathParam("id") Integer id) {
-        return super.delete(id);
+    public Response delete(@PathParam("customerNumber") Integer customerNumber,
+                           @PathParam("checkNumber") String checkNumber) {
+        return super.delete(new Payment.PaymentId(customerNumber, checkNumber));
     }
 
 }

@@ -1,8 +1,6 @@
 package de.bail.master.classic.model.enities;
 
 
-import de.bail.master.classic.util.GenericEntity;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,7 +12,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Customer.getAll", query = "select f from Customer f order by f.id asc")
 })
 // TODO @NamedEntityGraph(name = "salesRepEmployee", attributeNodes = @NamedAttributeNode("salesRepEmployee"))
-public class Customer extends GenericEntity implements Contact,  Serializable {
+public class Customer implements Contact, GenericEntity,  Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,12 +53,10 @@ public class Customer extends GenericEntity implements Contact,  Serializable {
 
   private Double creditLimit;
 
-  @Override
   public Integer getId() {
     return id;
   }
 
-  @Override
   public void setId(Integer customerNumber) {
     this.id = customerNumber;
   }
@@ -161,4 +157,8 @@ public class Customer extends GenericEntity implements Contact,  Serializable {
     this.creditLimit = creditLimit;
   }
 
+  @Override
+  public String idToString() {
+    return String.valueOf(id);
+  }
 }

@@ -1,14 +1,14 @@
 package de.bail.master.classic.service;
 
 import de.bail.master.classic.model.enities.Product;
-import de.bail.master.classic.util.CrudServiceStr;
+import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
 import java.util.List;
 
 @ApplicationScoped
-public class ProductService extends CrudServiceStr<Product> {
+public class ProductService extends CrudService<Product, String> {
 
     protected ProductService() {
         super(Product.class);
