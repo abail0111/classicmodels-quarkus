@@ -9,6 +9,7 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = "Product.count", query = "select count(f) from Product f"),
         @NamedQuery(name = "Product.getAll", query = "select f from Product f order by f.id asc"),
+        @NamedQuery(name = "Product.getByIDs", query = "select f from Product f where f.id in :products order by f.id asc"),
         @NamedQuery(name = "Product.filterByProductLine", query = "select f from Product f where f.productLine.id like :productLine order by f.id asc"),
         @NamedQuery(name = "Product.filterByProductLine.count", query = "select count(f)  from Product f where f.productLine.id like :productLine")
 })
@@ -22,7 +23,7 @@ public class Product implements GenericEntity, Serializable {
   @NotNull
   private String productName;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "productLine", nullable = false)
   private ProductLine productLine;
 

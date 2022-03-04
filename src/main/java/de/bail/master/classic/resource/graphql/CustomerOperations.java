@@ -51,15 +51,21 @@ public class CustomerOperations {
         return results;
     }
 
-    public List<List<Payment>> payments(Context context, @Source List<Customer> customers, @Name("limit") @DefaultValue("100") int limit) {
+    public List<List<Payment>> payments(@Source List<Customer> customers) {
         // Batching :
-        // TODO implement batching
+        // load all orders by customer ids
+        List<Integer> customerIDs = customers.stream().map(Customer::getId).collect(Collectors.toList());
+        List<Payment> payments = paymentService.getAllByCustomer(customerIDs);
+        // map payments to customer list
+        Map<Integer, List<Payment>> paymentMap = payments.stream().collect(Collectors.groupingBy(Payment::getCustomerNumber, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        List<List<Payment>> results = new ArrayList<>();
+        customers.forEach(customer -> results.add(paymentMap.get(customer.getId())));
         // n+1 :
-        List<List<Payment>> payments = new ArrayList<>();
-        for (Customer customer : customers) {
-            payments.add(paymentService.getAllByCustomer(customer.getId(), 0, limit));
-        }
-        return payments;
+        // List<List<Payment>> payments = new ArrayList<>();
+        // for (Customer customer : customers) {
+        //     payments.add(paymentService.getAllByCustomer(customer.getId(), 0, limit));
+        // }
+        return results;
     }
 
     @Mutation

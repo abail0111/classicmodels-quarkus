@@ -6,7 +6,11 @@ import de.bail.master.classic.service.OrderDetailService;
 import org.eclipse.microprofile.graphql.*;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @GraphQLApi
 public class OrderDetailOperations {
@@ -15,8 +19,19 @@ public class OrderDetailOperations {
     public OrderDetailService service;
 
     public List<OrderDetail> details(@Source Order order, @Name("limit") @DefaultValue("100") int limit) {
-        service.getAllByOrder(order.getId(), 0, limit);
-        return null;
+        return service.getAllByOrder(order.getId(), 0, limit);
+    }
+
+    public List<List<OrderDetail>> details(@Source List<Order> orders, @Name("limit") @DefaultValue("100") int limit) {
+        // Batching :
+        // load all orders by order ids
+        List<Integer> orderIDs = orders.stream().map(Order::getId).collect(Collectors.toList());
+        List<OrderDetail> orderDetails = service.getAllByOrders(orderIDs);
+        // map orderDetails to order list
+        Map<Integer, List<OrderDetail>> orderDetailMap = orderDetails.stream().collect(Collectors.groupingBy(OrderDetail::getOrder, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        List<List<OrderDetail>> results = new ArrayList<>();
+        orders.forEach(order -> results.add(orderDetailMap.get(order.getId())));
+        return results;
     }
     
     @Mutation

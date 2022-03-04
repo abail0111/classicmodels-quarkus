@@ -33,4 +33,10 @@ public class ProductService extends CrudService<Product, String> {
                 .intValue();
     }
 
+    public List<Product> getByIDs(List<String> products) {
+        Query query = em.createNamedQuery("Product.getByIDs");
+        query.setParameter("products", products);
+        return query.getResultList();
+    }
+
 }

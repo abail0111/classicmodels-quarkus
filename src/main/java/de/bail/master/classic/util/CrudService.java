@@ -49,12 +49,7 @@ public abstract class CrudService<T extends GenericEntity, ID> {
   }
 
   public T getEntityById(ID id) {
-    T entity = em.find(type, id);
-    if (entity != null) {
-      return entity;
-    } else {
-      throw new EntityNotFoundException(String.format("Couldn't find %s with id %s", type.getSimpleName(), id));
-    }
+    return em.find(type, id);
   }
 
   @Transactional

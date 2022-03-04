@@ -1,11 +1,18 @@
 package de.bail.master.classic.resource.graphql;
 
+import de.bail.master.classic.model.enities.Customer;
+import de.bail.master.classic.model.enities.Order;
+import de.bail.master.classic.model.enities.OrderDetail;
 import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.service.ProductService;
 import org.eclipse.microprofile.graphql.*;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @GraphQLApi
 public class ProductOperations {
@@ -30,6 +37,18 @@ public class ProductOperations {
         }
         return service.getAllEntitiesPagination(offset, limit);
     }
+
+    public List<List<Product>> product(@Source List<OrderDetail> orderDetails) {
+        // load all products by orderDetail product ids
+        List<String> productIDs = orderDetails.stream().map(orderDetail -> orderDetail.getProduct().getId()).collect(Collectors.toList());
+        List<Product> products = service.getByIDs(productIDs);
+        // map orders to customer list
+        Map<String, List<Product>> orderMap = products.stream().collect(Collectors.groupingBy(Product::getId, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        List<List<Product>> results = new ArrayList<>();
+        orderDetails.forEach(orderDetail -> results.add(orderMap.get(orderDetail.getProduct().getId())));
+        return results;
+    }
+
 
     @Mutation
     public Product createProduct(Product Product) {

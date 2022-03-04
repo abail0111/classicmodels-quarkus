@@ -1,5 +1,10 @@
 package de.bail.master.classic.model.enities;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -11,6 +16,7 @@ import java.util.Objects;
         @NamedQuery(name = "OrderDetail.count", query = "select count(f) from OrderDetail f"),
         @NamedQuery(name = "OrderDetail.getAll", query = "select f from OrderDetail f order by f.orderNumber asc"),
         @NamedQuery(name = "OrderDetail.getAllByOrder", query = "select f from OrderDetail f where f.orderNumber = :orderNumber order by f.product.id asc"),
+        @NamedQuery(name = "OrderDetail.getAllByOrders", query = "select f from OrderDetail f where f.orderNumber in :orderNumbers order by f.orderNumber asc"),
         @NamedQuery(name = "OrderDetail.getAllByOrder.count", query = "select count(f) from OrderDetail f where f.orderNumber = :orderNumber")
 })
 @IdClass(OrderDetail.OrderDetailId.class)

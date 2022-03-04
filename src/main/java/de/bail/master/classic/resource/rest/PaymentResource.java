@@ -16,6 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
 
 @Path("/payment")
@@ -55,7 +56,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
                          @QueryParam("limit") @DefaultValue("100") int limit) {
         Response response;
         try {
-            List<Payment> entities = service.getAllByCustomer(customerNumber, offset, limit);
+            List<Payment> entities = service.getAllByCustomer(Collections.singletonList(customerNumber));
             List<PaymentDto> dto = mapper.toResourceList(entities);
             dto.forEach(this::linkDTO);
             int count = service.getAllByCustomerCount(customerNumber);

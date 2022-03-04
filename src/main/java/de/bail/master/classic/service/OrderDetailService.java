@@ -33,4 +33,10 @@ public class OrderDetailService extends CrudService<OrderDetail, OrderDetail.Ord
                 .getSingleResult())
                 .intValue();
     }
+
+    public List<OrderDetail> getAllByOrders(List<Integer> orderNumbers) {
+        Query query = em.createNamedQuery("OrderDetail.getAllByOrders");
+        query.setParameter("orderNumbers", orderNumbers);
+        return query.getResultList();
+    }
 }

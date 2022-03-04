@@ -20,11 +20,9 @@ public class PaymentService extends CrudService<Payment, Payment.PaymentId> {
         return null;
     }
 
-    public List<Payment> getAllByCustomer(Integer customer, int offset, int limit) {
+    public List<Payment> getAllByCustomer(List<Integer> customers) {
         Query query = em.createNamedQuery("Payment.getAllByCustomer");
-        query.setParameter("customer", customer);
-        query.setFirstResult(offset);
-        query.setMaxResults(limit);
+        query.setParameter("customers", customers);
         return query.getResultList();
     }
 

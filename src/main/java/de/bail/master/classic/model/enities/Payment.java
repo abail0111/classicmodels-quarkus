@@ -12,7 +12,7 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "Payment.count", query = "select count(f) from Payment f"),
         @NamedQuery(name = "Payment.getAll", query = "select f from Payment f order by f.customerNumber asc"),
-        @NamedQuery(name = "Payment.getAllByCustomer", query = "select f from Payment f where f.customerNumber = :customer order by f.checkNumber asc"),
+        @NamedQuery(name = "Payment.getAllByCustomer", query = "select f from Payment f where f.customerNumber in :customers order by f.checkNumber asc"),
         @NamedQuery(name = "Payment.getAllByCustomer.count", query = "select count(f) from Payment f where f.customerNumber = :customer")
 })
 @IdClass(Payment.PaymentId.class)
