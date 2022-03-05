@@ -1,8 +1,6 @@
 package de.bail.master.classic.resource.graphql;
 
-import de.bail.master.classic.model.enities.Customer;
-import de.bail.master.classic.model.enities.Employee;
-import de.bail.master.classic.model.enities.Order;
+import de.bail.master.classic.model.enities.*;
 import de.bail.master.classic.service.EmployeeService;
 import org.eclipse.microprofile.graphql.*;
 
@@ -11,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @GraphQLApi
@@ -25,26 +24,36 @@ public class EmployeeOperations {
         return service.getEntityById(id);
     }
 
-    @Query("allEmployees")
-    @Description("Get all Employees")
+    @Query("employees")
+    @Description("Get a list of Employees")
     public List<Employee> getAllEmployees(
             @Name("offset") @DefaultValue("0") int offset,
             @Name("limit") @DefaultValue("100") int limit) {
         return service.getAllEntitiesPagination(offset, limit);
     }
 
-    public List<Employee> orders(@Source List<Customer> customers) {
-        // TODO implement batching
-//        // Batching :
-//        // load all orders by customer ids
-//        List<Integer> customerIDs = customers.stream().map(Customer::getId).collect(Collectors.toList());
-//        List<Order> orders = orderService.getAllByCustomer(customerIDs);
-//        // map orders to customer list
-//        Map<Customer, List<Order>> orderMap = orders.stream().collect(Collectors.groupingBy(Order::getCustomer, HashMap::new, Collectors.toCollection(ArrayList::new)));
-//        List<List<Order>> results = new ArrayList<>();
-//        customers.forEach(customer -> results.add(orderMap.get(customer)));
-//        return results;
-        return null;
+    public List<Employee> employee(@Source List<Customer> customers) {
+        // Batching employees for customers
+        // load all employees by id
+        List<Integer> employeeIDs = customers.stream().map(customer -> customer.getSalesRepEmployee().getId()).collect(Collectors.toList());
+        List<Employee> employees = service.getAllEmployees(employeeIDs);
+        // map employees to customer id
+        Map<Integer, Employee> employeeMap = employees.stream().collect(Collectors.toMap(Employee::getId, Function.identity()));
+        List<Employee> results = new ArrayList<>();
+        customers.forEach(customer -> results.add(employeeMap.get(customer.getSalesRepEmployee().getId())));
+        return results;
+    }
+
+    public List<List<Employee>> employees(@Source List<Office> offices) {
+        // Batching employees for offices
+        // load all employees by office id
+        List<String> officeIDs = offices.stream().map(Office::getId).collect(Collectors.toList());
+        List<Employee> employees = service.getAllByOffice(officeIDs);
+        // map employees to office
+        Map<Office, List<Employee>> employeeMap = employees.stream().collect(Collectors.groupingBy(Employee::getOffice, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        List<List<Employee>> results = new ArrayList<>();
+        offices.forEach(office -> results.add(employeeMap.get(office)));
+        return results;
     }
 
     @Mutation

@@ -1,12 +1,7 @@
 package de.bail.master.classic.resource.graphql;
 
-import de.bail.master.classic.model.enities.Customer;
-import de.bail.master.classic.model.enities.Order;
-import de.bail.master.classic.model.enities.Payment;
+import de.bail.master.classic.model.enities.*;
 import de.bail.master.classic.service.CustomerService;
-import de.bail.master.classic.service.OrderService;
-import de.bail.master.classic.service.PaymentService;
-import io.smallrye.graphql.api.Context;
 import org.eclipse.microprofile.graphql.*;
 
 import javax.inject.Inject;
@@ -17,73 +12,51 @@ import java.util.stream.Collectors;
 public class CustomerOperations {
 
     @Inject
-    public CustomerService customerService;
+    public CustomerService service;
 
-    @Inject
-    OrderService orderService;
-
-    @Inject
-    PaymentService paymentService;
 
     @Query("customer")
     @Description("Get Customer by id")
     public Customer getCustomer(@Name("id") int id) {
-        return customerService.getEntityById(id);
+        return service.getEntityById(id);
     }
 
-    @Query("allCustomers")
-    @Description("Get all Customers")
+    @Query("customers")
+    @Description("Get a list of Customers")
     public List<Customer> getAllCustomers(
             @Name("offset") @DefaultValue("0") int offset,
             @Name("limit") @DefaultValue("100") int limit) {
-        return customerService.getAllEntitiesPagination(offset, limit);
+        return service.getAllEntitiesPagination(offset, limit);
     }
 
-    public List<List<Order>> orders(@Source List<Customer> customers) {
-        // Batching :
-        // load all orders by customer ids
-        List<Integer> customerIDs = customers.stream().map(Customer::getId).collect(Collectors.toList());
-        List<Order> orders = orderService.getAllByCustomer(customerIDs);
-        // map orders to customer list
-        Map<Customer, List<Order>> orderMap = orders.stream().collect(Collectors.groupingBy(Order::getCustomer, HashMap::new, Collectors.toCollection(ArrayList::new)));
-        List<List<Order>> results = new ArrayList<>();
-        customers.forEach(customer -> results.add(orderMap.get(customer)));
-        return results;
-    }
-
-    public List<List<Payment>> payments(@Source List<Customer> customers) {
-        // Batching :
-        // load all orders by customer ids
-        List<Integer> customerIDs = customers.stream().map(Customer::getId).collect(Collectors.toList());
-        List<Payment> payments = paymentService.getAllByCustomer(customerIDs);
-        // map payments to customer list
-        Map<Integer, List<Payment>> paymentMap = payments.stream().collect(Collectors.groupingBy(Payment::getCustomerNumber, HashMap::new, Collectors.toCollection(ArrayList::new)));
-        List<List<Payment>> results = new ArrayList<>();
-        customers.forEach(customer -> results.add(paymentMap.get(customer.getId())));
-        // n+1 :
-        // List<List<Payment>> payments = new ArrayList<>();
-        // for (Customer customer : customers) {
-        //     payments.add(paymentService.getAllByCustomer(customer.getId(), 0, limit));
-        // }
+    public List<List<Customer>> customer(@Source List<Employee> employees) {
+        // Batching customer for employees
+        // load all customer by employee id
+        List<Integer> employeeIDs = employees.stream().map(Employee::getId).collect(Collectors.toList());
+        List<Customer> customer = service.getAllCustomerByEmployyes(employeeIDs);
+        // map employees to office
+        Map<Employee, List<Customer>> customerMap = customer.stream().collect(Collectors.groupingBy(Customer::getSalesRepEmployee, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        List<List<Customer>> results = new ArrayList<>();
+        employees.forEach(employee -> results.add(customerMap.get(employee)));
         return results;
     }
 
     @Mutation
     public Customer createCustomer(Customer customer) {
-        customerService.create(customer);
+        service.create(customer);
         return customer;
     }
 
     @Mutation
     public Customer updateCustomer(Customer customer) {
-        customerService.update(customer);
+        service.update(customer);
         return customer;
     }
 
     @Mutation
     public Customer deleteCustomer(int id) {
-        Customer customer = customerService.getEntityById(id);
-        customerService.deleteById(id);
+        Customer customer = service.getEntityById(id);
+        service.deleteById(id);
         return customer; //TODO Do we need to return something here?
     }
 }

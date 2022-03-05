@@ -1,10 +1,12 @@
 package de.bail.master.classic.service;
 
 import de.bail.master.classic.model.enities.Employee;
+import de.bail.master.classic.model.enities.Payment;
 import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,4 +52,15 @@ public class EmployeeService extends CrudService<Employee, Integer> {
         return Collections.emptyList();
     }
 
+    public List<Employee> getAllEmployees(List<Integer> employees) {
+        Query query = em.createNamedQuery("Employee.getAllByIDs");
+        query.setParameter("employees", employees);
+        return query.getResultList();
+    }
+
+    public List<Employee> getAllByOffice(List<String> office) {
+        Query query = em.createNamedQuery("Employee.getAllByOffice");
+        query.setParameter("office", office);
+        return query.getResultList();
+    }
 }

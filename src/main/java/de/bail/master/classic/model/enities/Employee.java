@@ -8,7 +8,9 @@ import java.io.Serializable;
 @Table(name = "employees")
 @NamedQueries({
         @NamedQuery(name = "Employee.count", query = "select count(f) from Employee f"),
-        @NamedQuery(name = "Employee.getAll", query = "select f from Employee f order by f.id asc")
+        @NamedQuery(name = "Employee.getAll", query = "select f from Employee f order by f.id asc"),
+        @NamedQuery(name = "Employee.getAllByIDs", query = "select f from Employee f where f.id in :employees order by f.id asc"),
+        @NamedQuery(name = "Employee.getAllByOffice", query = "select f from Employee f where f.office.id in :office order by f.id asc")
 })
 public class Employee implements Contact, GenericEntity, Serializable {
 

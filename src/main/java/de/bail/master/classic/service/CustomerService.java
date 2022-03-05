@@ -7,6 +7,7 @@ import de.bail.master.classic.util.CrudService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +59,12 @@ public class CustomerService extends CrudService<Customer, Integer> {
             return customers;
         }
         return Collections.emptyList();
+    }
+
+    public List<Customer> getAllCustomerByEmployyes(List<Integer> employeesId) {
+        Query query = em.createNamedQuery("Customer.getAllByEmployees");
+        query.setParameter("employees", employeesId);
+        return query.getResultList();
     }
 
 }

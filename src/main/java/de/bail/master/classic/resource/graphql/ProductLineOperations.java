@@ -19,8 +19,8 @@ public class ProductLineOperations {
         return service.getEntityById(id);
     }
 
-    @Query("allProductLines")
-    @Description("Get all ProductLines")
+    @Query("productLines")
+    @Description("Get a list of ProductLines")
     public List<ProductLine> getAllProductLines() {
         return service.getAllEntities();
     }

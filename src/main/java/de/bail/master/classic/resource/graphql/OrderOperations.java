@@ -1,11 +1,16 @@
 package de.bail.master.classic.resource.graphql;
 
+import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.service.OrderService;
 import org.eclipse.microprofile.graphql.*;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @GraphQLApi
 public class OrderOperations {
@@ -19,8 +24,8 @@ public class OrderOperations {
         return service.getEntityById(id);
     }
 
-    @Query("allOrders")
-    @Description("Get all Orders")
+    @Query("orders")
+    @Description("Get a list of Orders")
     public List<Order> getAllOrders(
             @Name("offset") @DefaultValue("0") int offset,
             @Name("limit") @DefaultValue("100") int limit,
@@ -29,6 +34,18 @@ public class OrderOperations {
             return service.filterByStatus(status, offset, limit);
         }
         return service.getAllEntitiesPagination(offset, limit);
+    }
+
+    public List<List<Order>> orders(@Source List<Customer> customers) {
+        // Batching orders for customer
+        // load all orders by customer ids
+        List<Integer> customerIDs = customers.stream().map(Customer::getId).collect(Collectors.toList());
+        List<Order> orders = service.getAllByCustomer(customerIDs);
+        // map orders to customer list
+        Map<Customer, List<Order>> orderMap = orders.stream().collect(Collectors.groupingBy(Order::getCustomer, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        List<List<Order>> results = new ArrayList<>();
+        customers.forEach(customer -> results.add(orderMap.get(customer)));
+        return results;
     }
 
     @Mutation

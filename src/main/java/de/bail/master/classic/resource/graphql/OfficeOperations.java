@@ -19,8 +19,8 @@ public class OfficeOperations {
         return service.getEntityById(id);
     }
 
-    @Query("allOffices")
-    @Description("Get all Offices")
+    @Query("offices")
+    @Description("Get a list of Offices")
     public List<Office> getAllOffices() {
         return service.getAllEntities();
     }

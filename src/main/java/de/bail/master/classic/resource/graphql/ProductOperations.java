@@ -1,7 +1,5 @@
 package de.bail.master.classic.resource.graphql;
 
-import de.bail.master.classic.model.enities.Customer;
-import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.model.enities.OrderDetail;
 import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.service.ProductService;
@@ -26,8 +24,8 @@ public class ProductOperations {
         return service.getEntityById(id);
     }
 
-    @Query("allProducts")
-    @Description("Get all Products")
+    @Query("products")
+    @Description("Get a list of Products")
     public List<Product> getAllProducts(
             @Name("offset") @DefaultValue("0") int offset,
             @Name("limit") @DefaultValue("100") int limit,
@@ -39,6 +37,7 @@ public class ProductOperations {
     }
 
     public List<List<Product>> product(@Source List<OrderDetail> orderDetails) {
+        // Batching products for order details
         // load all products by orderDetail product ids
         List<String> productIDs = orderDetails.stream().map(orderDetail -> orderDetail.getProduct().getId()).collect(Collectors.toList());
         List<Product> products = service.getByIDs(productIDs);

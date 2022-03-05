@@ -22,12 +22,12 @@ public class OrderDetailOperations {
         return service.getAllByOrder(order.getId(), 0, limit);
     }
 
-    public List<List<OrderDetail>> details(@Source List<Order> orders, @Name("limit") @DefaultValue("100") int limit) {
-        // Batching :
-        // load all orders by order ids
+    public List<List<OrderDetail>> details(@Source List<Order> orders) {
+        // Batching order details
+        // load all order details by order
         List<Integer> orderIDs = orders.stream().map(Order::getId).collect(Collectors.toList());
         List<OrderDetail> orderDetails = service.getAllByOrders(orderIDs);
-        // map orderDetails to order list
+        // map orderDetails to order id
         Map<Integer, List<OrderDetail>> orderDetailMap = orderDetails.stream().collect(Collectors.groupingBy(OrderDetail::getOrder, HashMap::new, Collectors.toCollection(ArrayList::new)));
         List<List<OrderDetail>> results = new ArrayList<>();
         orders.forEach(order -> results.add(orderDetailMap.get(order.getId())));
