@@ -38,12 +38,10 @@ public class Customer implements Contact, GenericEntity,  Serializable {
 
   private String addressLine2;
 
-  @NotNull
   private String city;
 
   private String state;
 
-  @NotNull
   private String postalCode;
 
   private String country;

@@ -32,18 +32,6 @@ public class EmployeeOperations {
         return service.getAllEntitiesPagination(offset, limit);
     }
 
-    public List<Employee> employee(@Source List<Customer> customers) {
-        // Batching employees for customers
-        // load all employees by id
-        List<Integer> employeeIDs = customers.stream().map(customer -> customer.getSalesRepEmployee().getId()).collect(Collectors.toList());
-        List<Employee> employees = service.getAllEmployees(employeeIDs);
-        // map employees to customer id
-        Map<Integer, Employee> employeeMap = employees.stream().collect(Collectors.toMap(Employee::getId, Function.identity()));
-        List<Employee> results = new ArrayList<>();
-        customers.forEach(customer -> results.add(employeeMap.get(customer.getSalesRepEmployee().getId())));
-        return results;
-    }
-
     public List<List<Employee>> employees(@Source List<Office> offices) {
         // Batching employees for offices
         // load all employees by office id
