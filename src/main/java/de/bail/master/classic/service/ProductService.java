@@ -2,11 +2,13 @@ package de.bail.master.classic.service;
 
 import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.util.CrudService;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
 import java.util.List;
 
+@Traced
 @ApplicationScoped
 public class ProductService extends CrudService<Product, String> {
 

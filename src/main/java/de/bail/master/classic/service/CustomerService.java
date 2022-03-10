@@ -1,9 +1,9 @@
 package de.bail.master.classic.service;
 
-import de.bail.master.classic.model.dto.CustomerDto;
 import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.model.enities.Employee;
 import de.bail.master.classic.util.CrudService;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Traced
 @ApplicationScoped
 public class CustomerService extends CrudService<Customer, Integer> {
 
@@ -61,7 +62,7 @@ public class CustomerService extends CrudService<Customer, Integer> {
         return Collections.emptyList();
     }
 
-    public List<Customer> getAllCustomerByEmployyes(List<Integer> employeesId) {
+    public List<Customer> getAllCustomerByEmployees(List<Integer> employeesId) {
         Query query = em.createNamedQuery("Customer.getAllByEmployees");
         query.setParameter("employees", employeesId);
         return query.getResultList();

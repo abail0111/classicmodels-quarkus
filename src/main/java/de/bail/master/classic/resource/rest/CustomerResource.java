@@ -8,6 +8,7 @@ import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.util.CrudResource;
 import de.bail.master.classic.util.VCard;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
 import javax.persistence.EntityNotFoundException;
@@ -29,6 +30,7 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     }
 
     @Override
+    @Traced
     public void linkDTO(CustomerDto dto) {
         if (dto != null && dto.getSalesRepEmployee() != null && dto.getSalesRepEmployee().getId() != 0) {
             Link link = linkService.BuildLinkRelated("/employee/" + dto.getSalesRepEmployee().getId(), MediaType.APPLICATION_JSON);

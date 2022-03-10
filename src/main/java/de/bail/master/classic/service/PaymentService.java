@@ -3,11 +3,13 @@ package de.bail.master.classic.service;
 import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.model.enities.Payment;
 import de.bail.master.classic.util.CrudService;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Query;
 import java.util.List;
 
+@Traced
 @ApplicationScoped
 public class PaymentService extends CrudService<Payment, Payment.PaymentId> {
 

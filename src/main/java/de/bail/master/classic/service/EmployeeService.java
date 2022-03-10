@@ -1,9 +1,8 @@
 package de.bail.master.classic.service;
 
 import de.bail.master.classic.model.enities.Employee;
-import de.bail.master.classic.model.enities.Payment;
 import de.bail.master.classic.util.CrudService;
-
+import org.eclipse.microprofile.opentracing.Traced;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Traced
 @ApplicationScoped
 public class EmployeeService extends CrudService<Employee, Integer> {
 

@@ -1,6 +1,7 @@
 package de.bail.master.classic.util;
 
 import de.bail.master.classic.model.enities.GenericEntity;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -9,7 +10,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
-
+@Traced
 public abstract class CrudService<T extends GenericEntity, ID> {
 
   @PersistenceContext()

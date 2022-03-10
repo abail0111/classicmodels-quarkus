@@ -1,11 +1,13 @@
 package de.bail.master.classic.service;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.UriBuilder;
 
+@Traced
 @ApplicationScoped
 public class LinkService {
 

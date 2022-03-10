@@ -3,10 +3,12 @@ package de.bail.master.classic.resource.graphql;
 import de.bail.master.classic.model.enities.Office;
 import de.bail.master.classic.service.OfficeService;
 import org.eclipse.microprofile.graphql.*;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
 import java.util.List;
 
+@Traced
 @GraphQLApi
 public class OfficeOperations {
 

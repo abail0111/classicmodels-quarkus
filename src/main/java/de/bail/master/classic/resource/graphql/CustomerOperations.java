@@ -3,11 +3,13 @@ package de.bail.master.classic.resource.graphql;
 import de.bail.master.classic.model.enities.*;
 import de.bail.master.classic.service.CustomerService;
 import org.eclipse.microprofile.graphql.*;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Traced
 @GraphQLApi
 public class CustomerOperations {
 
@@ -33,7 +35,7 @@ public class CustomerOperations {
         // Batching customer for employees
         // load all customer by employee id
         List<Integer> employeeIDs = employees.stream().map(Employee::getId).collect(Collectors.toList());
-        List<Customer> customer = service.getAllCustomerByEmployyes(employeeIDs);
+        List<Customer> customer = service.getAllCustomerByEmployees(employeeIDs);
         // map employees to office
         Map<Employee, List<Customer>> customerMap = customer.stream().collect(Collectors.groupingBy(Customer::getSalesRepEmployee, HashMap::new, Collectors.toCollection(ArrayList::new)));
         List<List<Customer>> results = new ArrayList<>();

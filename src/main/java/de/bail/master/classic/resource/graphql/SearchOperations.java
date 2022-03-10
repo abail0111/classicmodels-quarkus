@@ -6,6 +6,7 @@ import de.bail.master.classic.service.EmployeeService;
 import org.eclipse.microprofile.graphql.Description;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Query;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Traced
 @GraphQLApi
 public class SearchOperations {
 

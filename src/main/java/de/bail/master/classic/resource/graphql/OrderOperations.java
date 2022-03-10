@@ -4,6 +4,7 @@ import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.service.OrderService;
 import org.eclipse.microprofile.graphql.*;
+import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Traced
 @GraphQLApi
 public class OrderOperations {
 
