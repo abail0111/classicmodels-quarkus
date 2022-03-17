@@ -2,15 +2,11 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.OrderDetailDto;
 import de.bail.master.classic.model.enities.OrderDetail;
-import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.OrderDetailService;
 import de.bail.master.classic.mapper.OrderDetailMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
@@ -21,9 +17,6 @@ import java.util.List;
 @Path("/orderdetail")
 @Produces(MediaType.APPLICATION_JSON)
 public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDto, OrderDetail.OrderDetailId, OrderDetailService, OrderDetailMapper> {
-
-    @Inject
-    LinkService linkService;
 
     public OrderDetailResource() {
         super("/orderdetail/");
@@ -57,22 +50,12 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     public Response read(@PathParam("order") Integer order,
                          @QueryParam("offset") @DefaultValue("0") int offset,
                          @QueryParam("limit") @DefaultValue("100") int limit) {
-        Response response;
-        try {
-            List<OrderDetail> entities = service.getAllByOrder(order, offset, limit);
-            List<OrderDetailDto> dto = mapper.toResourceList(entities);
-            dto.forEach(this::linkDTO);
-            int count = service.getAllByOrderCount(order);
-            response = Response.ok(dto)
-                    .header("x-total-count", count).build();
-        } catch (EntityNotFoundException e) {
-            response = Response.status(Response.Status.NOT_FOUND).
-                    entity(e.getMessage()).build();
-        } catch (PersistenceException e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                    entity(e.getMessage()).build();
-        }
-        return response;
+
+        List<OrderDetail> entities = service.getAllByOrder(order, offset, limit);
+        List<OrderDetailDto> dto = mapper.toResourceList(entities);
+        dto.forEach(this::linkDTO);
+        int count = service.getAllByOrderCount(order);
+        return Response.ok(dto).header("x-total-count", count).build();
     }
 
     @GET

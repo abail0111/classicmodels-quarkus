@@ -2,15 +2,11 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.ProductDto;
 import de.bail.master.classic.model.enities.Product;
-import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.ProductService;
 import de.bail.master.classic.mapper.ProductMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
@@ -21,9 +17,6 @@ import java.util.List;
 @Path("/product")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductResource extends CrudResource<Product, ProductDto, String, ProductService, ProductMapper> {
-
-    @Inject
-    LinkService linkService;
 
     public ProductResource() {
         super("/product/");
@@ -63,29 +56,19 @@ public class ProductResource extends CrudResource<Product, ProductDto, String, P
             @QueryParam("offset") @DefaultValue("0") int offset,
             @QueryParam("limit") @DefaultValue("100") int limit,
             @QueryParam("productLine") String productLine) {
-        Response response;
-        try {
-            List<Product> products;
-            int count;
-            if (productLine != null && !productLine.isEmpty()) {
-                products = service.filterByProductLine(productLine, offset, limit);
-                count = service.countByFilter();
-            } else {
-                products = service.getAllEntitiesPagination(offset, limit);
-                count = service.count();
-            }
-            List<ProductDto> dto = mapper.toResourceList(products);
-            dto.forEach(this::linkDTO);
-            response = Response.ok(dto)
-                    .header("x-total-count", count).build();
-        } catch (EntityNotFoundException e) {
-            response = Response.status(Response.Status.NOT_FOUND).
-                    entity(e.getMessage()).build();
-        } catch (PersistenceException e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                    entity(e.getMessage()).build();
+
+        List<Product> products;
+        int count;
+        if (productLine != null && !productLine.isEmpty()) {
+            products = service.filterByProductLine(productLine, offset, limit);
+            count = service.countByFilter();
+        } else {
+            products = service.getAllEntitiesPagination(offset, limit);
+            count = service.count();
         }
-        return response;
+        List<ProductDto> dto = mapper.toResourceList(products);
+        dto.forEach(this::linkDTO);
+        return Response.ok(dto).header("x-total-count", count).build();
     }
 
     @PUT

@@ -2,15 +2,11 @@ package de.bail.master.classic.resource.rest;
 
 import de.bail.master.classic.model.dto.PaymentDto;
 import de.bail.master.classic.model.enities.Payment;
-import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.PaymentService;
 import de.bail.master.classic.mapper.PaymentMapper;
 import de.bail.master.classic.util.CrudResource;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
@@ -22,9 +18,6 @@ import java.util.List;
 @Path("/payment")
 @Produces(MediaType.APPLICATION_JSON)
 public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.PaymentId, PaymentService, PaymentMapper> {
-
-    @Inject
-    LinkService linkService;
 
     public PaymentResource() {
         super("/payment/");
@@ -54,22 +47,12 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
     public Response read(@PathParam("customer") Integer customerNumber,
                          @QueryParam("offset") @DefaultValue("0") int offset,
                          @QueryParam("limit") @DefaultValue("100") int limit) {
-        Response response;
-        try {
+
             List<Payment> entities = service.getAllByCustomer(Collections.singletonList(customerNumber));
             List<PaymentDto> dto = mapper.toResourceList(entities);
             dto.forEach(this::linkDTO);
             int count = service.getAllByCustomerCount(customerNumber);
-            response = Response.ok(dto)
-                    .header("x-total-count", count).build();
-        } catch (EntityNotFoundException e) {
-            response = Response.status(Response.Status.NOT_FOUND).
-                    entity(e.getMessage()).build();
-        } catch (PersistenceException e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                    entity(e.getMessage()).build();
-        }
-        return response;
+            return Response.ok(dto).header("x-total-count", count).build();
     }
 
     @GET

@@ -7,7 +7,6 @@ import de.bail.master.classic.model.dto.OrderDto;
 import de.bail.master.classic.model.dto.PaymentDto;
 import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.service.CustomerService;
-import de.bail.master.classic.service.LinkService;
 import de.bail.master.classic.service.OrderService;
 import de.bail.master.classic.service.PaymentService;
 import de.bail.master.classic.util.CrudResource;
@@ -16,8 +15,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
@@ -28,9 +25,6 @@ import java.util.List;
 
 @Path("/customer")
 public class CustomerResource extends CrudResource<Customer, CustomerDto, Integer, CustomerService, CustomerMapper> {
-
-    @Inject
-    LinkService linkService;
 
     @Inject
     CustomerDetailMapper detailMapper;
@@ -99,29 +93,19 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read Customer with sales rep name and payment list")
     public Response readDetails(@PathParam("id") Integer id) {
-        Response response;
-        try {
-            Customer entity = service.getEntityById(id);
-            CustomerDetailDto dto = detailMapper.toResource(entity);
-            // fetch payments
-            List<PaymentDto> payments = paymentMapper.toResourceList(
-                    paymentService.getAllByCustomer(Collections.singletonList(id)));
-            dto.setPayments(payments);
-            // fetch orders
-            List<OrderDto> orders = orderMapper.toResourceList(
-                    orderService.getAllByCustomer(Collections.singletonList(id)));
-            dto.setOrders(orders);
-            // link dto
-            linkDetailDTO(dto);
-            response = Response.ok(dto).build();
-        } catch (EntityNotFoundException e) {
-            response = Response.status(Response.Status.NOT_FOUND).
-                    entity(e.getMessage()).build();
-        } catch (PersistenceException e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                    entity(e.getMessage()).build();
-        }
-        return response;
+        Customer entity = service.getEntityById(id);
+        CustomerDetailDto dto = detailMapper.toResource(entity);
+        // fetch payments
+        List<PaymentDto> payments = paymentMapper.toResourceList(
+                paymentService.getAllByCustomer(Collections.singletonList(id)));
+        dto.setPayments(payments);
+        // fetch orders
+        List<OrderDto> orders = orderMapper.toResourceList(
+                orderService.getAllByCustomer(Collections.singletonList(id)));
+        dto.setOrders(orders);
+        // link dto
+        linkDetailDTO(dto);
+        return Response.ok(dto).build();
     }
 
     @GET
@@ -129,18 +113,8 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     @Consumes("text/x-vcard")
     @Produces("text/x-vcard; profile=\"vcard\"; charset=iso-8859-1")
     public Response vcard(@PathParam("id") Integer id) {
-        Response response;
-        try {
-            Customer customer = service.getEntityById(id);
-            response = Response.ok(VCard.createFromCustomer(customer)).build();
-        } catch (EntityNotFoundException e) {
-            response = Response.status(Response.Status.NOT_FOUND).
-                    entity(e.getMessage()).build();
-        } catch (PersistenceException | IllegalStateException e) {
-            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                    entity(e.getMessage()).build();
-        }
-        return response;
+        Customer customer = service.getEntityById(id);
+        return Response.ok(VCard.createFromCustomer(customer)).build();
     }
 
     @GET

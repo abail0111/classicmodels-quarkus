@@ -22,7 +22,7 @@ public class ProductLineResource extends CrudResource<ProductLine, ProductLineDt
 
     @Override
     public void linkDTO(ProductLineDto dto) {
-
+        // nothing to link
     }
 
     @POST

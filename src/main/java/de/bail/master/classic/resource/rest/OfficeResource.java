@@ -22,7 +22,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, String, Offi
 
     @Override
     public void linkDTO(OfficeDto dto) {
-
+        // nothing to link
     }
 
     @POST

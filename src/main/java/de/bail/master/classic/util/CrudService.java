@@ -8,6 +8,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 @Traced
@@ -33,6 +35,23 @@ public abstract class CrudService<T extends GenericEntity, ID> {
     this.type = type;
   }
 
+  /**
+   * Returns custom not found exception with graphql error code
+   * @param id of requested entity
+   * @return new custom NotFoundException
+   */
+  public CustomNotFoundException notFoundException(ID id) {
+    return new CustomNotFoundException(String.format("%s with ID %s could not be found.", type.getSimpleName(), id));
+  }
+
+  /**
+   * Returns custom internal server error exception with graphql error code
+   * @return new custom InternalServerErrorException
+   */
+  public CustomInternalServerErrorException internalServerErrorException() {
+    return new CustomInternalServerErrorException("Something went wrong while processing your request.");
+  }
+
   public abstract T create(T entity);
 
   private void persist(T entity) {
@@ -50,7 +69,11 @@ public abstract class CrudService<T extends GenericEntity, ID> {
   }
 
   public T getEntityById(ID id) {
-    return em.find(type, id);
+    T entity = em.find(type, id);
+    if (entity != null) {
+      return entity;
+    }
+    throw notFoundException(id);
   }
 
   @Transactional
@@ -76,7 +99,7 @@ public abstract class CrudService<T extends GenericEntity, ID> {
       em.remove(entity);
       em.flush();
     } else {
-      throw new EntityNotFoundException(String.format("Couldn't find %s with id %s", type.getSimpleName(), id));
+      throw notFoundException(id);
     }
   }
 
