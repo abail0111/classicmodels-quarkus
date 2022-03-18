@@ -92,7 +92,10 @@ public class OrderDetail implements GenericEntity, Serializable {
 
   @Override
   public String idToString() {
-    return orderNumber + "/" + product.getId();
+    if (product != null) {
+      return orderNumber + "/" + product.getId();
+    }
+    return "";
   }
 
   /**
@@ -106,6 +109,7 @@ public class OrderDetail implements GenericEntity, Serializable {
     private Product product;
 
     public OrderDetailId() {
+      product = new Product();
     }
 
     public OrderDetailId(Integer orderNumber, Product product) {
@@ -134,7 +138,7 @@ public class OrderDetail implements GenericEntity, Serializable {
       }
       OrderDetailId pk = (OrderDetailId) obj;
       return Objects.equals(orderNumber, pk.orderNumber) &&
-              Objects.equals(product, pk.product);
+              Objects.equals(product.getId(), pk.product.getId());
     }
 
     public Integer getOrder() {

@@ -117,6 +117,19 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
         return Response.ok(VCard.createFromCustomer(customer)).build();
     }
 
+//    @GET
+//    @Path("/search")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Operation(summary = "search for customer by term")
+//    public Response search(@QueryParam("term") String term) {
+//        List<Customer> customers = service.search(term);
+//        List<CustomerDto> dtos = mapper.toResourceList(customers);
+//        // link dto
+//        dtos.forEach(this::linkDTO);
+//        return Response.ok(dtos).build();
+//    }
+
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)

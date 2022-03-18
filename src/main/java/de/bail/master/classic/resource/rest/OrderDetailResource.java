@@ -24,7 +24,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
 
     @Override
     public void linkDTO(OrderDetailDto dto) {
-        if (dto != null && dto.getOrder() != null && dto.getOrder().getId() != 0) {
+        if (dto != null && dto.getOrder() != null && dto.getOrder().getId() != null && dto.getOrder().getId() != 0) {
             Link link = linkService.BuildLinkRelated("/order/" + dto.getOrder().getId(), MediaType.APPLICATION_JSON);
             dto.getOrder().setLink(link);
         }
@@ -64,7 +64,10 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     @Operation(summary = "read OrderDetail")
     public Response read(@PathParam("order") Integer order,
                          @PathParam("product") String product) {
-        return super.read(new OrderDetail.OrderDetailId(order, product));
+
+        System.out.println("Called /{order}/{product}");
+        OrderDetail.OrderDetailId orderDetailId = new OrderDetail.OrderDetailId(order, product);
+        return super.read(orderDetailId);
     }
 
     @PUT

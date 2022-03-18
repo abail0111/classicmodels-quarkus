@@ -25,7 +25,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
 
     @Override
     public void linkDTO(PaymentDto dto) {
-        if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != 0) {
+        if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != null && dto.getCustomer().getId() != 0) {
             Link link = linkService.BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
             dto.getCustomer().setLink(link);
         }

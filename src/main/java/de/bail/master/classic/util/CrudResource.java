@@ -109,7 +109,7 @@ public abstract class CrudResource<T extends GenericEntity, K, ID, S extends Cru
      */
     public Response update(ID id, K entity) {
         T updatedEntity = mapper.toEntity(entity);
-        updatedEntity = service.update(updatedEntity);
+        updatedEntity = service.update(id, updatedEntity);
         K dto = mapper.toResource(updatedEntity);
         linkDTO(dto);
         return Response.status(Response.Status.OK)

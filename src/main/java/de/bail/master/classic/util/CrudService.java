@@ -8,8 +8,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 @Traced
@@ -60,6 +58,12 @@ public abstract class CrudService<T extends GenericEntity, ID> {
 
   private void merge(T entity) {
     em.merge(entity);
+  }
+
+  @Transactional
+  public T update(ID id, T entity) {
+    merge(entity);
+    return entity;
   }
 
   @Transactional

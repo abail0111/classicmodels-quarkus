@@ -68,4 +68,8 @@ public class CustomerService extends CrudService<Customer, Integer> {
         return query.getResultList();
     }
 
+    public String greet(Integer id){
+        return "hello " + id;
+    }
+
 }
