@@ -83,7 +83,9 @@ public class OrderResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OrderDto())
                 .when().post()
-                .as(OrderDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(OrderDto.class);
         Assertions.assertNotNull(orderDto);
     }
 
@@ -117,7 +119,9 @@ public class OrderResourceTest {
     public void testReadByID_DataObject() {
         OrderDto orderDto = given()
                 .when().get("/1")
-                .as(OrderDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDto.class);
         Assertions.assertNotNull(orderDto);
     }
 
@@ -147,7 +151,9 @@ public class OrderResourceTest {
     public void testReadAll_DataObject() {
         OrderDto[] orderDtoList = given()
                 .when().get("/")
-                .as(OrderDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDto[].class);
         Assertions.assertNotNull(orderDtoList);
         Assertions.assertEquals(1, orderDtoList.length);
     }
@@ -194,7 +200,9 @@ public class OrderResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OrderDto())
                 .when().put("/1")
-                .as(OrderDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDto.class);
         Assertions.assertNotNull(orderDtoList);
     }
 

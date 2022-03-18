@@ -85,7 +85,9 @@ public class OrderDetailResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OrderDetailDto())
                 .when().post()
-                .as(OrderDetailDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(OrderDetailDto.class);
         Assertions.assertNotNull(orderDetailDto);
     }
 
@@ -119,7 +121,9 @@ public class OrderDetailResourceTest {
     public void testReadByID_DataObject() {
         OrderDetailDto orderDetailDto = given()
                 .when().get("/1/1")
-                .as(OrderDetailDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDetailDto.class);
         Assertions.assertNotNull(orderDetailDto);
     }
 
@@ -149,7 +153,9 @@ public class OrderDetailResourceTest {
     public void testReadAll_DataObject() {
         OrderDetailDto[] orderDetailDtoList = given()
                 .when().get("/1")
-                .as(OrderDetailDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDetailDto[].class);
         Assertions.assertNotNull(orderDetailDtoList);
         Assertions.assertEquals(1, orderDetailDtoList.length);
     }
@@ -196,7 +202,9 @@ public class OrderDetailResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OrderDetailDto())
                 .when().put("/1/1")
-                .as(OrderDetailDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDetailDto.class);
         Assertions.assertNotNull(orderDetailDtoList);
     }
 

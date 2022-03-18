@@ -65,7 +65,6 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     public Response read(@PathParam("order") Integer order,
                          @PathParam("product") String product) {
 
-        System.out.println("Called /{order}/{product}");
         OrderDetail.OrderDetailId orderDetailId = new OrderDetail.OrderDetailId(order, product);
         return super.read(orderDetailId);
     }
@@ -78,6 +77,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     public Response update(@PathParam("order") Integer order,
                            @PathParam("product") String product,
                            @Valid OrderDetailDto entity) {
+
         return super.update(new OrderDetail.OrderDetailId(order, product), entity);
     }
 
@@ -86,6 +86,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     @Operation(summary = "delete OrderDetail")
     public Response delete(@PathParam("order") Integer order,
                            @PathParam("product") String product) {
+
         return super.delete(new OrderDetail.OrderDetailId(order, product));
     }
 

@@ -99,7 +99,9 @@ public class CustomerResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new CustomerDto())
                 .when().post()
-                .as(CustomerDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(CustomerDto.class);
         Assertions.assertNotNull(customerDto);
     }
 
@@ -149,7 +151,9 @@ public class CustomerResourceTest {
     public void testReadByID_DataObject() {
         CustomerDto customerDto = given()
                 .when().get("/1")
-                .as(CustomerDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(CustomerDto.class);
         Assertions.assertNotNull(customerDto);
     }
 
@@ -183,7 +187,9 @@ public class CustomerResourceTest {
     public void testReadDetails_DataObject() {
         CustomerDetailDto customerDto = given()
                 .when().get("/1/details")
-                .as(CustomerDetailDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(CustomerDetailDto.class);
         Assertions.assertNotNull(customerDto);
     }
 
@@ -213,7 +219,9 @@ public class CustomerResourceTest {
     public void testReadAll_DataObject() {
         CustomerDto[] customerDtoList = given()
                 .when().get("/")
-                .as(CustomerDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(CustomerDto[].class);
         Assertions.assertNotNull(customerDtoList);
         Assertions.assertEquals(1, customerDtoList.length);
     }
@@ -260,7 +268,9 @@ public class CustomerResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new CustomerDto())
                 .when().put("/1")
-                .as(CustomerDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(CustomerDto.class);
         Assertions.assertNotNull(customerDtoList);
     }
 

@@ -87,7 +87,9 @@ public class PaymentResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new PaymentDto())
                 .when().post()
-                .as(PaymentDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(PaymentDto.class);
         Assertions.assertNotNull(paymentDto);
     }
 
@@ -121,7 +123,9 @@ public class PaymentResourceTest {
     public void testReadByID_DataObject() {
         PaymentDto paymentDto = given()
                 .when().get("/1/1")
-                .as(PaymentDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(PaymentDto.class);
         Assertions.assertNotNull(paymentDto);
     }
 
@@ -151,7 +155,9 @@ public class PaymentResourceTest {
     public void testReadAll_DataObject() {
         OrderDto[] orderDtoList = given()
                 .when().get("/")
-                .as(OrderDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(OrderDto[].class);
         Assertions.assertNotNull(orderDtoList);
         Assertions.assertEquals(1, orderDtoList.length);
     }
@@ -182,7 +188,9 @@ public class PaymentResourceTest {
     public void testReadAllByCustomer_DataObject() {
         PaymentDto[] paymentDtoList = given()
                 .when().get("/1")
-                .as(PaymentDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(PaymentDto[].class);
         Assertions.assertNotNull(paymentDtoList);
         Assertions.assertEquals(1, paymentDtoList.length);
     }
@@ -229,7 +237,9 @@ public class PaymentResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new PaymentDto())
                 .when().put("/1/1")
-                .as(PaymentDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(PaymentDto.class);
         Assertions.assertNotNull(paymentDtoList);
     }
 

@@ -83,7 +83,9 @@ public class ProductResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new ProductDto())
                 .when().post()
-                .as(ProductDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(ProductDto.class);
         Assertions.assertNotNull(productDto);
     }
 
@@ -117,7 +119,9 @@ public class ProductResourceTest {
     public void testReadByID_DataObject() {
         ProductDto productDto = given()
                 .when().get("/1")
-                .as(ProductDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(ProductDto.class);
         Assertions.assertNotNull(productDto);
     }
 
@@ -144,7 +148,9 @@ public class ProductResourceTest {
     public void testReadAll_DataObject() {
         ProductDto[] productDtoList = given()
                 .when().get("/")
-                .as(ProductDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(ProductDto[].class);
         Assertions.assertNotNull(productDtoList);
         Assertions.assertEquals(1, productDtoList.length);
     }
@@ -191,7 +197,9 @@ public class ProductResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new ProductDto())
                 .when().put("/1")
-                .as(ProductDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(ProductDto.class);
         Assertions.assertNotNull(productDtoList);
     }
 

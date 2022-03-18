@@ -84,7 +84,9 @@ public class OfficeResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OfficeDto())
                 .when().post()
-                .as(OfficeDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(OfficeDto.class);
         Assertions.assertNotNull(officeDto);
     }
 
@@ -118,7 +120,9 @@ public class OfficeResourceTest {
     public void testReadByID_DataObject() {
         OfficeDto officeDto = given()
                 .when().get("/1")
-                .as(OfficeDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(OfficeDto.class);
         Assertions.assertNotNull(officeDto);
     }
 
@@ -145,7 +149,9 @@ public class OfficeResourceTest {
     public void testReadAll_DataObject() {
         OfficeDto[] officeDtoList = given()
                 .when().get("/")
-                .as(OfficeDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(OfficeDto[].class);
         Assertions.assertNotNull(officeDtoList);
         Assertions.assertEquals(1, officeDtoList.length);
     }
@@ -192,7 +198,9 @@ public class OfficeResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OfficeDto())
                 .when().put("/1")
-                .as(OfficeDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(OfficeDto.class);
         Assertions.assertNotNull(officeDtoList);
     }
 

@@ -84,7 +84,9 @@ public class EmployeeResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new EmployeeDto())
                 .when().post()
-                .as(EmployeeDto.class);
+                .then()
+                .statusCode(201)
+                .extract().as(EmployeeDto.class);
         Assertions.assertNotNull(employeeDto);
     }
 
@@ -134,7 +136,9 @@ public class EmployeeResourceTest {
     public void testReadByID_DataObject() {
         EmployeeDto employeeDto = given()
                 .when().get("/1")
-                .as(EmployeeDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(EmployeeDto.class);
         Assertions.assertNotNull(employeeDto);
     }
 
@@ -164,7 +168,9 @@ public class EmployeeResourceTest {
     public void testReadAll_DataObject() {
         EmployeeDto[] employeeDtoList = given()
                 .when().get("/")
-                .as(EmployeeDto[].class);
+                .then()
+                .statusCode(200)
+                .extract().as(EmployeeDto[].class);
         Assertions.assertNotNull(employeeDtoList);
         Assertions.assertEquals(1, employeeDtoList.length);
     }
@@ -211,7 +217,9 @@ public class EmployeeResourceTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new EmployeeDto())
                 .when().put("/1")
-                .as(EmployeeDto.class);
+                .then()
+                .statusCode(200)
+                .extract().as(EmployeeDto.class);
         Assertions.assertNotNull(employeeDtoList);
     }
 
