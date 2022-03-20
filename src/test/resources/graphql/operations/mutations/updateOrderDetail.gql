@@ -1,0 +1,18 @@
+mutation updateOrderDetail($orderDetail: OrderDetailInput){
+    updateOrderDetail(orderDetail: $orderDetail){
+        order
+        orderLineNumber
+        priceEach
+        product{
+            buyPrice
+            id
+            msrp
+            productDescription
+            productName
+            productScale
+            productVendor
+            quantityInStock
+        }
+        quantityOrdered
+    }
+}

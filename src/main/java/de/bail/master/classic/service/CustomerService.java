@@ -29,7 +29,6 @@ public class CustomerService extends CrudService<Customer, Integer> {
         if (customer.getSalesRepEmployee() != null && customer.getSalesRepEmployee().getId() != null) {
             Employee employee = employeeService.getEntityById(customer.getSalesRepEmployee().getId());
             if (employee != null) {
-                System.out.println(employee.getFirstName());
                 save(customer);
             }
         } else {

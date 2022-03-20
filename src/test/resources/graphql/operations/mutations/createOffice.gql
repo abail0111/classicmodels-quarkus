@@ -1,0 +1,21 @@
+mutation createOffice($office: OfficeInput){
+    createOffice(office: $office){
+        addressLine1
+        addressLine2
+        city
+        country
+        employees{
+            email
+            extension
+            firstName
+            id
+            jobTitle
+            lastName
+        }
+        id
+        phone
+        postalCode
+        state
+        territory
+    }
+}

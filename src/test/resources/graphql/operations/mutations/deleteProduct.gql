@@ -1,0 +1,18 @@
+mutation deleteProduct($id: String){
+    deleteProduct(id: $id){
+        buyPrice
+        id
+        msrp
+        productDescription
+        productLine{
+            htmlDescription
+            id
+            image
+            textDescription
+        }
+        productName
+        productScale
+        productVendor
+        quantityInStock
+    }
+}

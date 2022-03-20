@@ -1,0 +1,10 @@
+query payment($checkNumber: String, $customerNumber: Int!){
+    payment(checkNumber: $checkNumber, customerNumber: $customerNumber){
+        amount
+        id{
+            checkNumber
+            customerNumber
+        }
+        paymentDate
+    }
+}

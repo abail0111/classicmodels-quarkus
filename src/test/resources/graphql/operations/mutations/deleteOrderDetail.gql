@@ -1,0 +1,18 @@
+mutation deleteOrderDetail($order: Int!, $product: String){
+    deleteOrderDetail(order: $order, product: $product){
+        order
+        orderLineNumber
+        priceEach
+        product{
+            buyPrice
+            id
+            msrp
+            productDescription
+            productName
+            productScale
+            productVendor
+            quantityInStock
+        }
+        quantityOrdered
+    }
+}

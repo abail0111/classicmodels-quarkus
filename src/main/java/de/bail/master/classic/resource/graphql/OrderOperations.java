@@ -51,21 +51,21 @@ public class OrderOperations {
     }
 
     @Mutation
-    public Order createOrder(Order Order) {
-        service.create(Order);
-        return Order;
+    public Order createOrder(Order order) {
+        service.create(order);
+        return order;
     }
 
     @Mutation
-    public Order updateOrder(Order Order) {
-        service.update(Order);
-        return Order;
+    public Order updateOrder(Order order) {
+        service.update(order);
+        return order;
     }
 
     @Mutation
     public Order deleteOrder(int id) {
-        Order Order = service.getEntityById(id);
+        Order order = service.getEntityById(id);
         service.deleteById(id);
-        return Order; //TODO Do we need to return something here?
+        return order;
     }
 }

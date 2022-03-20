@@ -1,0 +1,27 @@
+const fs = require('fs');
+const path = require('path');
+
+module.exports.createCustomer = fs.readFileSync(path.join(__dirname, 'createCustomer.gql'), 'utf8');
+module.exports.createEmployee = fs.readFileSync(path.join(__dirname, 'createEmployee.gql'), 'utf8');
+module.exports.createOffice = fs.readFileSync(path.join(__dirname, 'createOffice.gql'), 'utf8');
+module.exports.createOrder = fs.readFileSync(path.join(__dirname, 'createOrder.gql'), 'utf8');
+module.exports.createOrderDetail = fs.readFileSync(path.join(__dirname, 'createOrderDetail.gql'), 'utf8');
+module.exports.createPayment = fs.readFileSync(path.join(__dirname, 'createPayment.gql'), 'utf8');
+module.exports.createProduct = fs.readFileSync(path.join(__dirname, 'createProduct.gql'), 'utf8');
+module.exports.createProductLine = fs.readFileSync(path.join(__dirname, 'createProductLine.gql'), 'utf8');
+module.exports.deleteCustomer = fs.readFileSync(path.join(__dirname, 'deleteCustomer.gql'), 'utf8');
+module.exports.deleteEmployee = fs.readFileSync(path.join(__dirname, 'deleteEmployee.gql'), 'utf8');
+module.exports.deleteOffice = fs.readFileSync(path.join(__dirname, 'deleteOffice.gql'), 'utf8');
+module.exports.deleteOrder = fs.readFileSync(path.join(__dirname, 'deleteOrder.gql'), 'utf8');
+module.exports.deleteOrderDetail = fs.readFileSync(path.join(__dirname, 'deleteOrderDetail.gql'), 'utf8');
+module.exports.deletePayment = fs.readFileSync(path.join(__dirname, 'deletePayment.gql'), 'utf8');
+module.exports.deleteProduct = fs.readFileSync(path.join(__dirname, 'deleteProduct.gql'), 'utf8');
+module.exports.deleteProductLine = fs.readFileSync(path.join(__dirname, 'deleteProductLine.gql'), 'utf8');
+module.exports.updateCustomer = fs.readFileSync(path.join(__dirname, 'updateCustomer.gql'), 'utf8');
+module.exports.updateEmployee = fs.readFileSync(path.join(__dirname, 'updateEmployee.gql'), 'utf8');
+module.exports.updateOffice = fs.readFileSync(path.join(__dirname, 'updateOffice.gql'), 'utf8');
+module.exports.updateOrder = fs.readFileSync(path.join(__dirname, 'updateOrder.gql'), 'utf8');
+module.exports.updateOrderDetail = fs.readFileSync(path.join(__dirname, 'updateOrderDetail.gql'), 'utf8');
+module.exports.updatePayment = fs.readFileSync(path.join(__dirname, 'updatePayment.gql'), 'utf8');
+module.exports.updateProduct = fs.readFileSync(path.join(__dirname, 'updateProduct.gql'), 'utf8');
+module.exports.updateProductLine = fs.readFileSync(path.join(__dirname, 'updateProductLine.gql'), 'utf8');

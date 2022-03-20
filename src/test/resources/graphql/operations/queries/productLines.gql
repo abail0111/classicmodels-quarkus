@@ -1,0 +1,8 @@
+query productLines{
+    productLines{
+        htmlDescription
+        id
+        image
+        textDescription
+    }
+}

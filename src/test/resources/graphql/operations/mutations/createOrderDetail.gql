@@ -1,0 +1,18 @@
+mutation createOrderDetail($orderDetail: OrderDetailInput){
+    createOrderDetail(orderDetail: $orderDetail){
+        order
+        orderLineNumber
+        priceEach
+        product{
+            buyPrice
+            id
+            msrp
+            productDescription
+            productName
+            productScale
+            productVendor
+            quantityInStock
+        }
+        quantityOrdered
+    }
+}

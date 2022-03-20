@@ -52,21 +52,21 @@ public class PaymentOperations {
     }
 
     @Mutation
-    public Payment createPayment(Payment Payment) {
-        service.create(Payment);
-        return Payment;
+    public Payment createPayment(Payment payment) {
+        service.create(payment);
+        return payment;
     }
 
     @Mutation
-    public Payment updatePayment(Payment Payment) {
-        service.update(Payment);
-        return Payment;
+    public Payment updatePayment(Payment payment) {
+        service.update(payment);
+        return payment;
     }
 
     @Mutation
     public Payment deletePayment(int customerNumber, String checkNumber) {
-        Payment Payment = service.getEntityById(new Payment.PaymentId(customerNumber, checkNumber));
+        Payment payment = service.getEntityById(new Payment.PaymentId(customerNumber, checkNumber));
         service.deleteById(new Payment.PaymentId(customerNumber, checkNumber));
-        return Payment; //TODO Do we need to return something here?
+        return payment;
     }
 }

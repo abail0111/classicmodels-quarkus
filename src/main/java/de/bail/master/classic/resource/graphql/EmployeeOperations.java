@@ -47,21 +47,21 @@ public class EmployeeOperations {
     }
 
     @Mutation
-    public Employee createEmployee(Employee Employee) {
-        service.create(Employee);
-        return Employee;
+    public Employee createEmployee(Employee employee) {
+        service.create(employee);
+        return employee;
     }
 
     @Mutation
-    public Employee updateEmployee(Employee Employee) {
-        service.update(Employee);
-        return Employee;
+    public Employee updateEmployee(Employee employee) {
+        service.update(employee);
+        return employee;
     }
 
     @Mutation
     public Employee deleteEmployee(int id) {
-        Employee Employee = service.getEntityById(id);
+        Employee employee = service.getEntityById(id);
         service.deleteById(id);
-        return Employee; //TODO Do we need to return something here?
+        return employee;
     }
 }

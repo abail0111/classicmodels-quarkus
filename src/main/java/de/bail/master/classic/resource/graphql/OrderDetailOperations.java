@@ -20,10 +20,6 @@ public class OrderDetailOperations {
     @Inject
     public OrderDetailService service;
 
-    public List<OrderDetail> details(@Source Order order, @Name("limit") @DefaultValue("100") int limit) {
-        return service.getAllByOrder(order.getId(), 0, limit);
-    }
-
     public List<List<OrderDetail>> details(@Source List<Order> orders) {
         // Batching order details
         // load all order details by order
@@ -37,21 +33,21 @@ public class OrderDetailOperations {
     }
     
     @Mutation
-    public OrderDetail createOrderDetail(OrderDetail OrderDetail) {
-        service.create(OrderDetail);
-        return OrderDetail;
+    public OrderDetail createOrderDetail(OrderDetail orderDetail) {
+        service.create(orderDetail);
+        return orderDetail;
     }
 
     @Mutation
-    public OrderDetail updateOrderDetail(OrderDetail OrderDetail) {
-        service.update(OrderDetail);
-        return OrderDetail;
+    public OrderDetail updateOrderDetail(OrderDetail orderDetail) {
+        service.update(orderDetail);
+        return orderDetail;
     }
 
     @Mutation
     public OrderDetail deleteOrderDetail(int order, String product) {
-        OrderDetail OrderDetail = service.getEntityById(new OrderDetail.OrderDetailId(order, product));
+        OrderDetail orderDetail = service.getEntityById(new OrderDetail.OrderDetailId(order, product));
         service.deleteById(new OrderDetail.OrderDetailId(order, product));
-        return OrderDetail; //TODO Do we need to return something here?
+        return orderDetail;
     }
 }

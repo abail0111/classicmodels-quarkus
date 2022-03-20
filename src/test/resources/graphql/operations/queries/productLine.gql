@@ -1,0 +1,8 @@
+query productLine($id: String){
+    productLine(id: $id){
+        htmlDescription
+        id
+        image
+        textDescription
+    }
+}

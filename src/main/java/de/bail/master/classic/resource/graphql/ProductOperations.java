@@ -52,21 +52,21 @@ public class ProductOperations {
 
 
     @Mutation
-    public Product createProduct(Product Product) {
-        service.create(Product);
-        return Product;
+    public Product createProduct(Product product) {
+        service.create(product);
+        return product;
     }
 
     @Mutation
-    public Product updateProduct(Product Product) {
-        service.update(Product);
-        return Product;
+    public Product updateProduct(Product product) {
+        service.update(product);
+        return product;
     }
 
     @Mutation
     public Product deleteProduct(String id) {
-        Product Product = service.getEntityById(id);
+        Product product = service.getEntityById(id);
         service.deleteById(id);
-        return Product; //TODO Do we need to return something here?
+        return product;
     }
 }

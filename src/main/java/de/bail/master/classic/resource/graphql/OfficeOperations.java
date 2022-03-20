@@ -28,21 +28,21 @@ public class OfficeOperations {
     }
 
     @Mutation
-    public Office createOffice(Office Office) {
-        service.create(Office);
-        return Office;
+    public Office createOffice(Office office) {
+        service.create(office);
+        return office;
     }
 
     @Mutation
-    public Office updateOffice(Office Office) {
-        service.update(Office);
-        return Office;
+    public Office updateOffice(Office office) {
+        service.update(office);
+        return office;
     }
 
     @Mutation
     public Office deleteOffice(String id) {
-        Office Office = service.getEntityById(id);
+        Office office = service.getEntityById(id);
         service.deleteById(id);
-        return Office; //TODO Do we need to return something here?
+        return office;
     }
 }

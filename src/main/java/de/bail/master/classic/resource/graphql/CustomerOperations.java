@@ -59,6 +59,6 @@ public class CustomerOperations {
     public Customer deleteCustomer(int id) {
         Customer customer = service.getEntityById(id);
         service.deleteById(id);
-        return customer; //TODO Do we need to return something here?
+        return customer;
     }
 }

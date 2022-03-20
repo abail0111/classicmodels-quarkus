@@ -1,0 +1,8 @@
+mutation deleteProductLine($id: String){
+    deleteProductLine(id: $id){
+        htmlDescription
+        id
+        image
+        textDescription
+    }
+}

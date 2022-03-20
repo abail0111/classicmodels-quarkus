@@ -1,0 +1,10 @@
+mutation deletePayment($checkNumber: String, $customerNumber: Int!){
+    deletePayment(checkNumber: $checkNumber, customerNumber: $customerNumber){
+        amount
+        id{
+            checkNumber
+            customerNumber
+        }
+        paymentDate
+    }
+}

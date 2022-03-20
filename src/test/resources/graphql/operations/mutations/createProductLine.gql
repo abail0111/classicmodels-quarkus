@@ -1,0 +1,8 @@
+mutation createProductLine($productLine: ProductLineInput){
+    createProductLine(productLine: $productLine){
+        htmlDescription
+        id
+        image
+        textDescription
+    }
+}

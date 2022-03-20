@@ -1,0 +1,254 @@
+interface Contact {
+  firstName: String!
+  id: Int
+  lastName: String!
+}
+
+type Customer implements Contact {
+  addressLine1: String!
+  addressLine2: String
+  city: String
+  country: String
+  creditLimit: Float
+  customerName: String!
+  firstName: String!
+  id: Int
+  lastName: String!
+  orders: [Order]
+  payments: [Payment]
+  phone: String
+  postalCode: String
+  salesRepEmployee: Employee
+  state: String
+}
+
+type Employee implements Contact {
+  customer: [Customer]
+  email: String!
+  extension: String!
+  firstName: String!
+  id: Int
+  jobTitle: String!
+  lastName: String!
+  office: Office
+  reportsTo: Employee
+}
+
+"Mutation root"
+type Mutation {
+  createCustomer(customer: CustomerInput): Customer
+  createEmployee(employee: EmployeeInput): Employee
+  createOffice(office: OfficeInput): Office
+  createOrder(order: OrderInput): Order
+  createOrderDetail(orderDetail: OrderDetailInput): OrderDetail
+  createPayment(payment: PaymentInput): Payment
+  createProduct(product: ProductInput): Product
+  createProductLine(productLine: ProductLineInput): ProductLine
+  deleteCustomer(id: Int!): Customer
+  deleteEmployee(id: Int!): Employee
+  deleteOffice(id: String): Office
+  deleteOrder(id: Int!): Order
+  deleteOrderDetail(order: Int!, product: String): OrderDetail
+  deletePayment(checkNumber: String, customerNumber: Int!): Payment
+  deleteProduct(id: String): Product
+  deleteProductLine(id: String): ProductLine
+  updateCustomer(customer: CustomerInput): Customer
+  updateEmployee(employee: EmployeeInput): Employee
+  updateOffice(office: OfficeInput): Office
+  updateOrder(order: OrderInput): Order
+  updateOrderDetail(orderDetail: OrderDetailInput): OrderDetail
+  updatePayment(payment: PaymentInput): Payment
+  updateProduct(product: ProductInput): Product
+  updateProductLine(productLine: ProductLineInput): ProductLine
+}
+
+type Office {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  country: String!
+  employees: [Employee]
+  id: String
+  phone: String!
+  postalCode: String!
+  state: String
+  territory: String!
+}
+
+type Order {
+  comments: String
+  customer: Customer
+  details: [OrderDetail]
+  id: Int
+  "ISO-8601"
+  orderDate: String
+  "ISO-8601"
+  requiredDate: String
+  "ISO-8601"
+  shippedDate: String
+  status: String!
+}
+
+type OrderDetail {
+  order: Int
+  orderLineNumber: Int!
+  priceEach: Float!
+  product: [Product]
+  quantityOrdered: Int!
+}
+
+type Payment {
+  amount: Float!
+  id: PaymentId
+  "ISO-8601"
+  paymentDate: String!
+}
+
+type PaymentId {
+  checkNumber: String
+  customerNumber: Int
+}
+
+type Product {
+  buyPrice: Float!
+  id: String
+  msrp: Float!
+  productDescription: String
+  productLine: ProductLine
+  productName: String!
+  productScale: String!
+  productVendor: String!
+  quantityInStock: Int!
+}
+
+type ProductLine {
+  htmlDescription: String
+  id: String
+  image: [Int]
+  textDescription: String
+}
+
+"Query root"
+type Query {
+  "Get Customer by id"
+  customer(id: Int!): Customer
+  "Get a list of Customers"
+  customers(limit: Int = 100, offset: Int = 0): [Customer]
+  "Get Employee by id"
+  employee(id: Int!): Employee
+  "Get a list of Employees"
+  employees(limit: Int = 100, offset: Int = 0): [Employee]
+  "Get Office by id"
+  office(id: String): Office
+  "Get a list of Offices"
+  offices: [Office]
+  "Get Order by id"
+  order(id: Int!): Order
+  "Get a list of Orders"
+  orders(limit: Int = 100, offset: Int = 0, status: String): [Order]
+  "Get Payment by id"
+  payment(checkNumber: String, customerNumber: Int!): Payment
+  "Get a list of Payments"
+  payments(limit: Int = 100, offset: Int = 0): [Payment]
+  "Get Product by id"
+  product(id: String): Product
+  "Get ProductLine by id"
+  productLine(id: String): ProductLine
+  "Get a list of ProductLines"
+  productLines: [ProductLine]
+  "Get a list of Products"
+  products(limit: Int = 100, offset: Int = 0, productLine: String): [Product]
+  "Search for customers and employees"
+  searchContact(limit: Int!, term: String): [Contact]
+}
+
+input CustomerInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String
+  country: String
+  creditLimit: Float
+  customerName: String!
+  firstName: String!
+  id: Int
+  lastName: String!
+  phone: String
+  postalCode: String
+  salesRepEmployee: EmployeeInput
+  state: String
+}
+
+input EmployeeInput {
+  email: String!
+  extension: String!
+  firstName: String!
+  id: Int
+  jobTitle: String!
+  lastName: String!
+  office: OfficeInput
+  reportsTo: EmployeeInput
+}
+
+input OfficeInput {
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  country: String!
+  id: String
+  phone: String!
+  postalCode: String!
+  state: String
+  territory: String!
+}
+
+input OrderDetailInput {
+  order: Int
+  orderLineNumber: Int!
+  priceEach: Float!
+  product: ProductInput
+  quantityOrdered: Int!
+}
+
+input OrderInput {
+  comments: String
+  customer: CustomerInput
+  id: Int
+  "ISO-8601"
+  orderDate: String
+  "ISO-8601"
+  requiredDate: String
+  "ISO-8601"
+  shippedDate: String
+  status: String!
+}
+
+input PaymentIdInput {
+  checkNumber: String
+  customerNumber: Int
+}
+
+input PaymentInput {
+  amount: Float!
+  id: PaymentIdInput
+  "ISO-8601"
+  paymentDate: String!
+}
+
+input ProductInput {
+  buyPrice: Float!
+  id: String
+  msrp: Float!
+  productDescription: String
+  productLine: ProductLineInput
+  productName: String!
+  productScale: String!
+  productVendor: String!
+  quantityInStock: Int!
+}
+
+input ProductLineInput {
+  htmlDescription: String
+  id: String
+  image: [Int]
+  textDescription: String
+}

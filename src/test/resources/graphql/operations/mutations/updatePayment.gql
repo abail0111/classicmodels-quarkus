@@ -1,0 +1,10 @@
+mutation updatePayment($payment: PaymentInput){
+    updatePayment(payment: $payment){
+        amount
+        id{
+            checkNumber
+            customerNumber
+        }
+        paymentDate
+    }
+}

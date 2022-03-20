@@ -1,0 +1,30 @@
+mutation createOrder($order: OrderInput){
+    createOrder(order: $order){
+        comments
+        customer{
+            addressLine1
+            addressLine2
+            city
+            country
+            creditLimit
+            customerName
+            firstName
+            id
+            lastName
+            phone
+            postalCode
+            state
+        }
+        details{
+            order
+            orderLineNumber
+            priceEach
+            quantityOrdered
+        }
+        id
+        orderDate
+        requiredDate
+        shippedDate
+        status
+    }
+}

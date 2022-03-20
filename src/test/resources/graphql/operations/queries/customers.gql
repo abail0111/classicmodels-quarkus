@@ -1,0 +1,36 @@
+query customers($limit: Int, $offset: Int){
+    customers(limit: $limit, offset: $offset){
+        addressLine1
+        addressLine2
+        city
+        country
+        creditLimit
+        customerName
+        firstName
+        id
+        lastName
+        orders{
+            comments
+            id
+            orderDate
+            requiredDate
+            shippedDate
+            status
+        }
+        payments{
+            amount
+            paymentDate
+        }
+        phone
+        postalCode
+        salesRepEmployee{
+            email
+            extension
+            firstName
+            id
+            jobTitle
+            lastName
+        }
+        state
+    }
+}

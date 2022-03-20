@@ -1,0 +1,10 @@
+query payments($limit: Int, $offset: Int){
+    payments(limit: $limit, offset: $offset){
+        amount
+        id{
+            checkNumber
+            customerNumber
+        }
+        paymentDate
+    }
+}

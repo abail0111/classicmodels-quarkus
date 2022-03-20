@@ -1,0 +1,43 @@
+query employee($id: Int!){
+    employee(id: $id){
+        customer{
+            addressLine1
+            addressLine2
+            city
+            country
+            creditLimit
+            customerName
+            firstName
+            id
+            lastName
+            phone
+            postalCode
+            state
+        }
+        email
+        extension
+        firstName
+        id
+        jobTitle
+        lastName
+        office{
+            addressLine1
+            addressLine2
+            city
+            country
+            id
+            phone
+            postalCode
+            state
+            territory
+        }
+        reportsTo{
+            email
+            extension
+            firstName
+            id
+            jobTitle
+            lastName
+        }
+    }
+}

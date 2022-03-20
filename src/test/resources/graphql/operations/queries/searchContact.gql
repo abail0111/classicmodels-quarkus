@@ -1,0 +1,7 @@
+query searchContact($limit: Int!, $term: String){
+    searchContact(limit: $limit, term: $term){
+        firstName
+        id
+        lastName
+    }
+}

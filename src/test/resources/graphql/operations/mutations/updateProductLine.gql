@@ -1,0 +1,8 @@
+mutation updateProductLine($productLine: ProductLineInput){
+    updateProductLine(productLine: $productLine){
+        htmlDescription
+        id
+        image
+        textDescription
+    }
+}

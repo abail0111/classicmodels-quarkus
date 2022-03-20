@@ -28,21 +28,21 @@ public class ProductLineOperations {
     }
 
     @Mutation
-    public ProductLine createProductLine(ProductLine ProductLine) {
-        service.create(ProductLine);
-        return ProductLine;
+    public ProductLine createProductLine(ProductLine productLine) {
+        service.create(productLine);
+        return productLine;
     }
 
     @Mutation
-    public ProductLine updateProductLine(ProductLine ProductLine) {
-        service.update(ProductLine);
-        return ProductLine;
+    public ProductLine updateProductLine(ProductLine productLine) {
+        service.update(productLine);
+        return productLine;
     }
 
     @Mutation
     public ProductLine deleteProductLine(String id) {
-        ProductLine ProductLine = service.getEntityById(id);
+        ProductLine productLine = service.getEntityById(id);
         service.deleteById(id);
-        return ProductLine; //TODO Do we need to return something here?
+        return productLine;
     }
 }
