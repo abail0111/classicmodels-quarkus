@@ -1,8 +1,66 @@
-# classicmodels Project
+# Classic Models API
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+### Installed Features
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+- agroal 
+- cdi 
+- hibernate-orm
+- jaeger
+- jdbc-mysql
+- narayana-jta
+- resteasy
+- resteasy-jsonb
+- smallrye-context-propagation
+- smallrye-graphql
+- smallrye-openapi
+- smallrye-opentracing
+- swagger-ui
+- vertx
+
+## Database
+
+This project uses a slightly modified version of the
+[BIRT](https://eclipse.github.io/birt-website/docs/template-sample-database/) /
+[MySQL](https://www.mysqltutorial.org/mysql-sample-database.aspx)
+sample database 'ClassicModels'. To create the 'classicmodels' database use the
+MySQL scripts from the /misc/mysql directory.
+
+```
+# Start the mysql utility
+mysql --local-infile=1 -u root -p
+
+# Enabling LOAD DATA LOCAL INFILE in mysql
+mysql> SET GLOBAL local_infile=1;
+
+# Create the ClassicModels database and load the schema and content
+mysql> create database classicmodels;
+mysql> use classicmodels;
+mysql> source create_classicmodels.sql;
+mysql> source load_classicmodels.sql;
+mysql> quit;
+```
+
+## Testing
+
+
+
+### Generate GraphQL Operations
+
+Using
+[gql-generator](https://github.com/timqian/gql-generator)
+to generate queries and mutations from GraphQL Schema.
+Copy the Schema file from
+[/graphql/schema.graphql](http://localhost:8081/graphql/schema.graphql)
+into the test resource directory (src\test\resources\) and run the generator.
+
+```
+# Install
+npm install gql-generator -g
+
+# Generate queries and mutations from schema file
+gqlg --schemaFilePath ./schema.graphql --destDirPath ./operations --depthLimit 2
+```
+
 
 ## Running the application in dev mode
 
@@ -46,28 +104,3 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/classicmodels-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Related Guides
-
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and JPA
-- RESTEasy JAX-RS ([guide](https://quarkus.io/guides/rest-json)): REST endpoint framework implementing JAX-RS and more
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
-
-
-## Sample Database
-How to Load the Sample Database into MySQL Server
-
-[MySQL Tutorial...](https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx)
