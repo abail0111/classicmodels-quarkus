@@ -46,12 +46,11 @@ mysql> quit;
 
 ### Generate GraphQL Operations
 
-Using
-[gql-generator](https://github.com/timqian/gql-generator)
+Use [gql-generator](https://github.com/timqian/gql-generator)
 to generate queries and mutations from GraphQL Schema.
 Copy the Schema file from
 [/graphql/schema.graphql](http://localhost:8081/graphql/schema.graphql)
-into the test resource directory (src\test\resources\) and run the generator.
+into the test resource directory (src\test\resources\graphql) and run the generator.
 
 ```
 # Install

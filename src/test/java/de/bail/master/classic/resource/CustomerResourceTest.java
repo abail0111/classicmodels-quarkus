@@ -3,6 +3,7 @@ package de.bail.master.classic.resource;
 import de.bail.master.classic.model.dto.CustomerDetailDto;
 import de.bail.master.classic.model.dto.CustomerDto;
 import de.bail.master.classic.model.enities.Customer;
+import de.bail.master.classic.model.enities.Employee;
 import de.bail.master.classic.model.enities.Order;
 import de.bail.master.classic.model.enities.Payment;
 import de.bail.master.classic.resource.rest.CustomerResource;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
@@ -38,16 +40,34 @@ public class CustomerResourceTest {
     @InjectMock
     OrderService orderService;
 
+    Customer customer;
+
     @BeforeEach
     public void setup() {
+        // instantiating employee object
+        Employee employee = new Employee();
+        employee.setId(1);
+        employee.setFirstName("Brendon");
+        employee.setLastName("Storek");
+        employee.setEmail("bendon.storek@classicmodels.com");
+        employee.setExtension("x123");
+        employee.setJobTitle("sales");
+        // instantiating customer object
+        customer = new Customer();
+        customer.setId(1);
+        customer.setFirstName("John");
+        customer.setLastName("Doe");
+        customer.setCustomerName("Test Inc.");
+        customer.setAddressLine1("6964 Farewell Avenue");
+        customer.setSalesRepEmployee(employee);
         // mock customer service
-        when(customerService.getEntityById(eq(1))).thenReturn(new Customer());
+        when(customerService.getEntityById(eq(1))).thenReturn(customer);
         when(customerService.getEntityById(eq(2))).thenThrow(new CustomNotFoundException());
-        when(customerService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(new Customer()));
-        when(customerService.getAllEntities()).thenReturn(Collections.singletonList(new Customer()));
+        when(customerService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(customer));
+        when(customerService.getAllEntities()).thenReturn(Collections.singletonList(customer));
         when(customerService.count()).thenReturn(10);
-        when(customerService.create(any(Customer.class))).thenReturn(new Customer());
-        when(customerService.update(eq(1), any(Customer.class))).thenReturn(new Customer());
+        when(customerService.create(any(Customer.class))).thenReturn(customer);
+        when(customerService.update(eq(1), any(Customer.class))).thenReturn(customer);
         when(customerService.update(eq(2), any(Customer.class))).thenThrow(new CustomNotFoundException());
         doNothing().when(customerService).deleteById(eq(1));
         doThrow(new CustomNotFoundException()).when(customerService).deleteById(eq(2));
@@ -90,19 +110,20 @@ public class CustomerResourceTest {
         Assertions.assertEquals(MediaType.APPLICATION_JSON, response.headers().get("Content-Type").getValue());
         // location
         Assertions.assertTrue(response.headers().hasHeaderWithName("Location"));
-        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/customer/null"));
+        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/customer/1"));
     }
 
     @Test
     public void testCreate_DataObject() {
-        CustomerDto customerDto = given()
+        given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new CustomerDto())
                 .when().post()
                 .then()
                 .statusCode(201)
-                .extract().as(CustomerDto.class);
-        Assertions.assertNotNull(customerDto);
+                .body("id", equalTo(customer.getId()))
+                .body("firstName", equalTo(customer.getFirstName()))
+                .body("lastName", equalTo(customer.getLastName()));
     }
 
     // ------------ Test Read by ID ------------
@@ -133,12 +154,6 @@ public class CustomerResourceTest {
 
     @Test
     public void testReadByID_VCard() {
-        // setup customer object to use VCard correctly
-        Customer customer = new Customer();
-        customer.setId(1);
-        customer.setFirstName("John");
-        customer.setLastName("Doe");
-        when(customerService.getEntityById(Mockito.eq(1))).thenReturn(customer);
         // request vcard by content type
         Response response = given()
                 .header("Content-Type", "text/x-vcard")
@@ -149,12 +164,13 @@ public class CustomerResourceTest {
 
     @Test
     public void testReadByID_DataObject() {
-        CustomerDto customerDto = given()
+        given()
                 .when().get("/1")
                 .then()
                 .statusCode(200)
-                .extract().as(CustomerDto.class);
-        Assertions.assertNotNull(customerDto);
+                .body("id", equalTo(customer.getId()))
+                .body("firstName", equalTo(customer.getFirstName()))
+                .body("lastName", equalTo(customer.getLastName()));
     }
 
     // ------------ Test Read Details ------------
@@ -185,12 +201,13 @@ public class CustomerResourceTest {
 
     @Test
     public void testReadDetails_DataObject() {
-        CustomerDetailDto customerDto = given()
+        given()
                 .when().get("/1/details")
                 .then()
                 .statusCode(200)
-                .extract().as(CustomerDetailDto.class);
-        Assertions.assertNotNull(customerDto);
+                .body("id", equalTo(customer.getId()))
+                .body("firstName", equalTo(customer.getFirstName()))
+                .body("lastName", equalTo(customer.getLastName()));
     }
 
     // ------------ Test Read All ------------
@@ -217,13 +234,13 @@ public class CustomerResourceTest {
 
     @Test
     public void testReadAll_DataObject() {
-        CustomerDto[] customerDtoList = given()
+        given()
                 .when().get("/")
                 .then()
                 .statusCode(200)
-                .extract().as(CustomerDto[].class);
-        Assertions.assertNotNull(customerDtoList);
-        Assertions.assertEquals(1, customerDtoList.length);
+                .body("[0].id", equalTo(customer.getId()))
+                .body("[0].firstName", equalTo(customer.getFirstName()))
+                .body("[0].lastName", equalTo(customer.getLastName()));
     }
 
     // ------------ Test Update ------------
@@ -259,19 +276,21 @@ public class CustomerResourceTest {
         Assertions.assertEquals(MediaType.APPLICATION_JSON, response.headers().get("Content-Type").getValue());
         // location
         Assertions.assertTrue(response.headers().hasHeaderWithName("Location"));
-        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/customer/null"));
+        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/customer/1"));
     }
 
     @Test
     public void testUpdate_DataObject() {
-        CustomerDto customerDtoList = given()
+        given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new CustomerDto())
                 .when().put("/1")
                 .then()
+                .assertThat()
                 .statusCode(200)
-                .extract().as(CustomerDto.class);
-        Assertions.assertNotNull(customerDtoList);
+                .body("id", equalTo(customer.getId()))
+                .body("firstName", equalTo(customer.getFirstName()))
+                .body("lastName", equalTo(customer.getLastName()));
     }
 
     // ------------ Test Delete ------------

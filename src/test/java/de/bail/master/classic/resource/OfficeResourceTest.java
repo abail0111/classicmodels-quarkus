@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
@@ -27,16 +28,27 @@ public class OfficeResourceTest {
     @InjectMock
     OfficeService officeService;
 
+    Office office;
+
     @BeforeEach
     public void setup() {
+        // instantiating office object
+        office = new Office();
+        office.setId("1");
+        office.setCity("Berlin");
+        office.setPhone("+49 12345 112233");
+        office.setAddressLine1("997 Classic Street");
+        office.setCountry("Germany");
+        office.setPostalCode("10115");
+        office.setTerritory("EMEA");
         // mock office service
-        when(officeService.getEntityById(eq("1"))).thenReturn(new Office());
+        when(officeService.getEntityById(eq("1"))).thenReturn(office);
         when(officeService.getEntityById(eq("2"))).thenThrow(new CustomNotFoundException());
-        when(officeService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(new Office()));
-        when(officeService.getAllEntities()).thenReturn(Collections.singletonList(new Office()));
+        when(officeService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(office));
+        when(officeService.getAllEntities()).thenReturn(Collections.singletonList(office));
         when(officeService.count()).thenReturn(10);
-        when(officeService.create(any(Office.class))).thenReturn(new Office());
-        when(officeService.update(eq("1"), any(Office.class))).thenReturn(new Office());
+        when(officeService.create(any(Office.class))).thenReturn(office);
+        when(officeService.update(eq("1"), any(Office.class))).thenReturn(office);
         when(officeService.update(eq("2"), any(Office.class))).thenThrow(new CustomNotFoundException());
         doNothing().when(officeService).deleteById(eq("1"));
         doThrow(new CustomNotFoundException()).when(officeService).deleteById(eq("2"));
@@ -75,7 +87,7 @@ public class OfficeResourceTest {
         Assertions.assertEquals(MediaType.APPLICATION_JSON, response.headers().get("Content-Type").getValue());
         // location
         Assertions.assertTrue(response.headers().hasHeaderWithName("Location"));
-        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/office/null"));
+        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/office/1"));
     }
 
     @Test
@@ -118,12 +130,13 @@ public class OfficeResourceTest {
 
     @Test
     public void testReadByID_DataObject() {
-        OfficeDto officeDto = given()
+        given()
                 .when().get("/1")
                 .then()
                 .statusCode(200)
-                .extract().as(OfficeDto.class);
-        Assertions.assertNotNull(officeDto);
+                .body("id", equalTo(office.getId()))
+                .body("city", equalTo(office.getCity()))
+                .body("country", equalTo(office.getCountry()));
     }
 
     // ------------ Test Read All ------------
@@ -147,13 +160,13 @@ public class OfficeResourceTest {
 
     @Test
     public void testReadAll_DataObject() {
-        OfficeDto[] officeDtoList = given()
+        given()
                 .when().get("/")
                 .then()
                 .statusCode(200)
-                .extract().as(OfficeDto[].class);
-        Assertions.assertNotNull(officeDtoList);
-        Assertions.assertEquals(1, officeDtoList.length);
+                .body("[0].id", equalTo(office.getId()))
+                .body("[0].city", equalTo(office.getCity()))
+                .body("[0].country", equalTo(office.getCountry()));
     }
 
     // ------------ Test Update ------------
@@ -189,19 +202,20 @@ public class OfficeResourceTest {
         Assertions.assertEquals(MediaType.APPLICATION_JSON, response.headers().get("Content-Type").getValue());
         // location
         Assertions.assertTrue(response.headers().hasHeaderWithName("Location"));
-        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/office/null"));
+        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/office/1"));
     }
 
     @Test
     public void testUpdate_DataObject() {
-        OfficeDto officeDtoList = given()
+        given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new OfficeDto())
                 .when().put("/1")
                 .then()
                 .statusCode(200)
-                .extract().as(OfficeDto.class);
-        Assertions.assertNotNull(officeDtoList);
+                .body("id", equalTo(office.getId()))
+                .body("city", equalTo(office.getCity()))
+                .body("country", equalTo(office.getCountry()));
     }
 
     // ------------ Test Delete ------------

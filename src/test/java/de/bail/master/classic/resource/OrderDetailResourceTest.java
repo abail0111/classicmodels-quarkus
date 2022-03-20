@@ -2,6 +2,7 @@ package de.bail.master.classic.resource;
 
 import de.bail.master.classic.model.dto.OrderDetailDto;
 import de.bail.master.classic.model.enities.OrderDetail;
+import de.bail.master.classic.model.enities.Product;
 import de.bail.master.classic.resource.rest.OrderDetailResource;
 import de.bail.master.classic.service.OrderDetailService;
 import de.bail.master.classic.util.CustomNotFoundException;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
@@ -26,18 +28,25 @@ public class OrderDetailResourceTest {
     @InjectMock
     OrderDetailService orderDetailService;
 
+    OrderDetail orderDetail;
+
     @BeforeEach
     public void setup() {
+        // instantiating order detail object
+        orderDetail = new OrderDetail();
+        orderDetail.setOrderNumber(1);
+        orderDetail.setProduct(new Product());
+        orderDetail.setPriceEach(19.99);
         // mock orderDetail service
-        when(orderDetailService.getEntityById(eq(new OrderDetail.OrderDetailId(1,"1")))).thenReturn(new OrderDetail());
+        when(orderDetailService.getEntityById(eq(new OrderDetail.OrderDetailId(1,"1")))).thenReturn(orderDetail);
         when(orderDetailService.getEntityById(eq(new OrderDetail.OrderDetailId(2,"2")))).thenThrow(new CustomNotFoundException());
-        when(orderDetailService.getAllByOrder(anyInt(), anyInt(), anyInt())).thenReturn(Collections.singletonList(new OrderDetail()));
-        when(orderDetailService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(new OrderDetail()));
-        when(orderDetailService.getAllEntities()).thenReturn(Collections.singletonList(new OrderDetail()));
+        when(orderDetailService.getAllByOrder(anyInt(), anyInt(), anyInt())).thenReturn(Collections.singletonList(orderDetail));
+        when(orderDetailService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(orderDetail));
+        when(orderDetailService.getAllEntities()).thenReturn(Collections.singletonList(orderDetail));
         when(orderDetailService.count()).thenReturn(10);
         when(orderDetailService.getAllByOrderCount(anyInt())).thenReturn(10);
-        when(orderDetailService.create(any(OrderDetail.class))).thenReturn(new OrderDetail());
-        when(orderDetailService.update(eq(new OrderDetail.OrderDetailId(1,"1")), any(OrderDetail.class))).thenReturn(new OrderDetail());
+        when(orderDetailService.create(any(OrderDetail.class))).thenReturn(orderDetail);
+        when(orderDetailService.update(eq(new OrderDetail.OrderDetailId(1,"1")), any(OrderDetail.class))).thenReturn(orderDetail);
         when(orderDetailService.update(eq(new OrderDetail.OrderDetailId(2,"2")), any(OrderDetail.class))).thenThrow(new CustomNotFoundException());
         doNothing().when(orderDetailService).deleteById(eq(new OrderDetail.OrderDetailId(1,"1")));
         doThrow(new CustomNotFoundException()).when(orderDetailService).deleteById(eq(new OrderDetail.OrderDetailId(2,"2")));

@@ -1,7 +1,9 @@
 package de.bail.master.classic.resource;
 
 import de.bail.master.classic.model.dto.EmployeeDto;
+import de.bail.master.classic.model.enities.Customer;
 import de.bail.master.classic.model.enities.Employee;
+import de.bail.master.classic.model.enities.Office;
 import de.bail.master.classic.resource.rest.EmployeeResource;
 import de.bail.master.classic.service.EmployeeService;
 import de.bail.master.classic.util.CustomNotFoundException;
@@ -12,12 +14,12 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.*;
 
 @QuarkusTest
@@ -27,16 +29,45 @@ public class EmployeeResourceTest {
     @InjectMock
     EmployeeService employeeService;
 
+    Employee employee;
+    
     @BeforeEach
     public void setup() {
+        // instantiating office object
+        Office office = new Office();
+        office.setId("1");
+        office.setCity("Berlin");
+        office.setPhone("+49 12345 112233");
+        office.setAddressLine1("997 Classic Street");
+        office.setCountry("Germany");
+        office.setPostalCode("10115");
+        office.setTerritory("EMEA");
+        // instantiating employee object
+        employee = new Employee();
+        employee.setId(1);
+        employee.setFirstName("Brendon");
+        employee.setLastName("Storek");
+        employee.setEmail("bendon.storek@classicmodels.com");
+        employee.setExtension("x123");
+        employee.setJobTitle("sales");
+        employee.setOffice(office);
+        employee.setReportsTo(employee);
+        // instantiating customer object
+        Customer customer = new Customer();
+        customer.setId(1);
+        customer.setFirstName("John");
+        customer.setLastName("Doe");
+        customer.setCustomerName("Test Inc.");
+        customer.setAddressLine1("6964 Farewell Avenue");
+        customer.setSalesRepEmployee(employee);
         // mock employee service
-        when(employeeService.getEntityById(eq(1))).thenReturn(new Employee());
+        when(employeeService.getEntityById(eq(1))).thenReturn(employee);
         when(employeeService.getEntityById(eq(2))).thenThrow(new CustomNotFoundException());
-        when(employeeService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(new Employee()));
-        when(employeeService.getAllEntities()).thenReturn(Collections.singletonList(new Employee()));
+        when(employeeService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(employee));
+        when(employeeService.getAllEntities()).thenReturn(Collections.singletonList(employee));
         when(employeeService.count()).thenReturn(10);
-        when(employeeService.create(any(Employee.class))).thenReturn(new Employee());
-        when(employeeService.update(eq(1), any(Employee.class))).thenReturn(new Employee());
+        when(employeeService.create(any(Employee.class))).thenReturn(employee);
+        when(employeeService.update(eq(1), any(Employee.class))).thenReturn(employee);
         when(employeeService.update(eq(2), any(Employee.class))).thenThrow(new CustomNotFoundException());
         doNothing().when(employeeService).deleteById(eq(1));
         doThrow(new CustomNotFoundException()).when(employeeService).deleteById(eq(2));
@@ -75,19 +106,20 @@ public class EmployeeResourceTest {
         Assertions.assertEquals(MediaType.APPLICATION_JSON, response.headers().get("Content-Type").getValue());
         // location
         Assertions.assertTrue(response.headers().hasHeaderWithName("Location"));
-        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/employee/null"));
+        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/employee/1"), "Actual Location: " + response.headers().get("Location").getValue());
     }
 
     @Test
     public void testCreate_DataObject() {
-        EmployeeDto employeeDto = given()
+        given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new EmployeeDto())
                 .when().post()
                 .then()
                 .statusCode(201)
-                .extract().as(EmployeeDto.class);
-        Assertions.assertNotNull(employeeDto);
+                .body("id", equalTo(employee.getId()))
+                .body("firstName", equalTo(employee.getFirstName()))
+                .body("lastName", equalTo(employee.getLastName()));
     }
 
     // ------------ Test Read by ID ------------
@@ -118,12 +150,6 @@ public class EmployeeResourceTest {
 
     @Test
     public void testReadByID_VCard() {
-        // setup employee object to use VCard correctly
-        Employee employee = new Employee();
-        employee.setId(1);
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
-        when(employeeService.getEntityById(Mockito.eq(1))).thenReturn(employee);
         // request vcard by content type
         Response response = given()
                 .header("Content-Type", "text/x-vcard")
@@ -134,12 +160,13 @@ public class EmployeeResourceTest {
 
     @Test
     public void testReadByID_DataObject() {
-        EmployeeDto employeeDto = given()
+        given()
                 .when().get("/1")
                 .then()
                 .statusCode(200)
-                .extract().as(EmployeeDto.class);
-        Assertions.assertNotNull(employeeDto);
+                .body("id", equalTo(employee.getId()))
+                .body("firstName", equalTo(employee.getFirstName()))
+                .body("lastName", equalTo(employee.getLastName()));
     }
 
     // ------------ Test Read All ------------
@@ -166,13 +193,13 @@ public class EmployeeResourceTest {
 
     @Test
     public void testReadAll_DataObject() {
-        EmployeeDto[] employeeDtoList = given()
+        given()
                 .when().get("/")
                 .then()
                 .statusCode(200)
-                .extract().as(EmployeeDto[].class);
-        Assertions.assertNotNull(employeeDtoList);
-        Assertions.assertEquals(1, employeeDtoList.length);
+                .body("[0].id", equalTo(employee.getId()))
+                .body("[0].firstName", equalTo(employee.getFirstName()))
+                .body("[0].lastName", equalTo(employee.getLastName()));
     }
 
     // ------------ Test Update ------------
@@ -208,19 +235,20 @@ public class EmployeeResourceTest {
         Assertions.assertEquals(MediaType.APPLICATION_JSON, response.headers().get("Content-Type").getValue());
         // location
         Assertions.assertTrue(response.headers().hasHeaderWithName("Location"));
-        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/employee/null"));
+        Assertions.assertTrue(response.headers().get("Location").getValue().contains("/employee/1"), "Actual Location: " + response.headers().get("Location").getValue());
     }
 
     @Test
     public void testUpdate_DataObject() {
-        EmployeeDto employeeDtoList = given()
+        given()
                 .header("Content-Type", MediaType.APPLICATION_JSON)
                 .body(new EmployeeDto())
                 .when().put("/1")
                 .then()
                 .statusCode(200)
-                .extract().as(EmployeeDto.class);
-        Assertions.assertNotNull(employeeDtoList);
+                .body("id", equalTo(employee.getId()))
+                .body("firstName", equalTo(employee.getFirstName()))
+                .body("lastName", equalTo(employee.getLastName()));
     }
 
     // ------------ Test Delete ------------
