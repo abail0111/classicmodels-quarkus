@@ -1,5 +1,8 @@
 package de.bail.master.classic.model.enities;
 
+import io.smallrye.graphql.api.AdaptToScalar;
+import io.smallrye.graphql.api.Scalar;
+
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,6 +30,7 @@ public class Payment implements GenericEntity, Serializable {
   private String checkNumber;
 
   @NotNull
+  @AdaptToScalar(Scalar.String.class)
   private Timestamp paymentDate;
 
   @NotNull

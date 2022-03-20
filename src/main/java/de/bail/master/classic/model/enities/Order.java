@@ -1,5 +1,8 @@
 package de.bail.master.classic.model.enities;
 
+import io.smallrye.graphql.api.AdaptToScalar;
+import io.smallrye.graphql.api.Scalar;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,10 +24,13 @@ public class Order implements GenericEntity, Serializable {
   @Column(name = "orderNumber")
   private Integer id;
 
+  @AdaptToScalar(Scalar.String.class)
   private LocalDateTime orderDate;
 
+  @AdaptToScalar(Scalar.String.class)
   private LocalDateTime requiredDate;
 
+  @AdaptToScalar(Scalar.String.class)
   private LocalDateTime shippedDate;
 
   @NotNull
