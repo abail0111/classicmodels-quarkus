@@ -27,6 +27,7 @@ DROP TABLE OrderDetails;
 DROP TABLE Orders;
 DROP TABLE Payments;
 DROP TABLE Products;
+DROP TABLE product_seq;
 DROP TABLE ProductLines;
 
 /* Create the full set of Classic Models Tables */
@@ -101,8 +102,13 @@ CREATE TABLE Payments (
   PRIMARY KEY (customerNumber, checkNumber)
 );
 
+CREATE TABLE product_seq
+(
+  next_val BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY
+);
+
 CREATE TABLE Products (
-  productCode VARCHAR(15) NOT NULL,
+  productCode VARCHAR(15) NOT NULL DEFAULT '0',
   productName VARCHAR(70) NOT NULL,
   productLine VARCHAR(50) NOT NULL,
   productScale VARCHAR(10) NOT NULL,
@@ -122,6 +128,6 @@ CREATE TABLE ProductLines(
   PRIMARY KEY (productLine)
 );
 
-
+INSERT INTO product_seq (next_val) VALUES (0);
 
 

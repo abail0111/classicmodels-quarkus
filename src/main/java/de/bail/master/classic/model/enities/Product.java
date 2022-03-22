@@ -1,7 +1,10 @@
 package de.bail.master.classic.model.enities;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Entity
@@ -15,9 +18,12 @@ import java.io.Serializable;
 })
 public class Product implements GenericEntity, Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id // ID Pattern: 'S<scale>_<id>' e.g. 'S12_1099'
   @Column(name = "productCode")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
+  @GenericGenerator(
+          name = "product_seq",
+          strategy = "de.bail.master.classic.util.ProductIdSequenceGenerator")
   private String id;
 
   @NotNull
@@ -28,6 +34,7 @@ public class Product implements GenericEntity, Serializable {
   private ProductLine productLine;
 
   @NotNull
+  @Pattern(regexp = "1:[0-9]{1,}")
   private String productScale;
 
   @NotNull

@@ -18,7 +18,8 @@ public class ProductService extends CrudService<Product, String> {
 
     @Override
     public Product create(Product entity) {
-        return null;
+        save(entity);
+        return entity;
     }
 
     public List<Product> filterByProductLine(String productLine, int offset, int limit) {
