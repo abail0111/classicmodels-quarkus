@@ -1,6 +1,12 @@
 # Classic Models API
 
-### Installed Features
+The Classic Models API project is a Quarkus implementation of a 
+RESTful and GraphQL web service based on the
+[BIRT](https://eclipse.github.io/birt-website/docs/template-sample-database/) /
+[MySQL](https://www.mysqltutorial.org/mysql-sample-database.aspx)
+sample database.
+
+Installed Features:
 
 - agroal 
 - cdi 
@@ -25,7 +31,7 @@ This project uses a slightly modified version of the
 sample database 'ClassicModels'. To create the 'classicmodels' database use the
 MySQL scripts from the /misc/mysql directory.
 
-```
+```shell script
 # Start the mysql utility
 mysql --local-infile=1 -u root -p
 
@@ -52,7 +58,7 @@ Copy the Schema file from
 [/graphql/schema.graphql](http://localhost:8081/graphql/schema.graphql)
 into the test resource directory (src\test\resources\graphql) and run the generator.
 
-```
+```shell script
 # Install
 npm install gql-generator -g
 
@@ -68,7 +74,22 @@ You can run your application in dev mode that enables live coding using:
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8081/q/dev/.
+
+
+## Using Opentracing
+
+A detailed guide to Opentracing can be found [here](https://quarkus.io/guides/opentracing). \
+Start the tracing system to collect and display the captured traces
+```shell script
+docker run -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 jaegertracing/all-in-one:latest
+```
+Start the application in dev mode
+```shell script
+./mvnw compile quarkus:dev
+```
+To see all tracing results in the Jeager UI visit [localhost:16686](http://localhost:16686/)
+
 
 ## Packaging and running the application
 
@@ -87,6 +108,7 @@ If you want to build an _über-jar_, execute the following command:
 ```
 
 The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+
 
 ## Creating a native executable
 
