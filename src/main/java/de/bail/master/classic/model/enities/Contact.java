@@ -2,6 +2,9 @@ package de.bail.master.classic.model.enities;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Contact Interface
+ */
 public interface Contact {
 
     Integer getId();

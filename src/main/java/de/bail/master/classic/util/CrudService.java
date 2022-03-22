@@ -10,11 +10,17 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Abstract Crud Service
+ * @param <T> Basic entity
+ * @param <ID> Wrapper type of entity id
+ */
 @Traced
 public abstract class CrudService<T extends GenericEntity, ID> {
 
   @PersistenceContext()
   protected EntityManager em;
+
   private final Class<T> type;
 
   /**
@@ -27,7 +33,7 @@ public abstract class CrudService<T extends GenericEntity, ID> {
 
   /**
    * AbstractService Constructor
-   * @param type of Entity is needed to secure the correct implementation of the JPA access methods
+   * @param type The type of Entity is needed to secure the correct implementation of the JPA access methods
    */
   protected CrudService(Class<T> type) {
     this.type = type;
@@ -35,11 +41,11 @@ public abstract class CrudService<T extends GenericEntity, ID> {
 
   /**
    * Returns custom not found exception with graphql error code
-   * @param id of requested entity
-   * @return new custom NotFoundException
+   * @param id The id of requested entity
+   * @return New custom NotFoundException
    */
   public CustomNotFoundException notFoundException(ID id) {
-    return new CustomNotFoundException(String.format("%s with ID %s could not be found.", type.getSimpleName(), id));
+    return new CustomNotFoundException(String.format("%s with ID '%s' could not be found.", type.getSimpleName(), id));
   }
 
   /**
@@ -50,28 +56,57 @@ public abstract class CrudService<T extends GenericEntity, ID> {
     return new CustomInternalServerErrorException("Something went wrong while processing your request.");
   }
 
+  /**
+   * Save a new entity to the database
+   * @param entity New entity
+   * @return Persisted entity
+   */
   public abstract T create(T entity);
 
+  /**
+   * Persist entity
+   * @param entity Entity
+   */
   private void persist(T entity) {
     em.persist(entity);
   }
 
+  /**
+   * Merge
+   * @param entity Entity
+   */
   private void merge(T entity) {
     em.merge(entity);
   }
 
+  /**
+   * Merge
+   * @param id Entity id
+   * @param entity Entity
+   * @return Entity
+   */
   @Transactional
   public T update(ID id, T entity) {
     merge(entity);
     return entity;
   }
 
+  /**
+   * Merge
+   * @param entity Entity
+   * @return Entity
+   */
   @Transactional
   public T update(T entity) {
     merge(entity);
     return entity;
   }
 
+  /**
+   * Get entity by id
+   * @param id Entity id
+   * @return Entity
+   */
   public T getEntityById(ID id) {
     T entity = em.find(type, id);
     if (entity != null) {
@@ -80,12 +115,30 @@ public abstract class CrudService<T extends GenericEntity, ID> {
     throw notFoundException(id);
   }
 
+  /**
+   * Has entity
+   * @param id Entity id
+   * @return true if entity was found
+   */
+  public boolean hasEntity(ID id) {
+    return getEntityById(id) != null;
+  }
+
+  /**
+   * Persist new entity
+   * @param entity New entity
+   * @return Persisted Entity
+   */
   @Transactional
   public T save(@Valid T entity) {
     persist(entity);
     return entity;
   }
 
+  /**
+   * Delete by Entity
+   * @param entity Entity to be deleted
+   */
   @Transactional
   public void delete(T entity) {
     if (em.contains(entity)) {
@@ -96,6 +149,10 @@ public abstract class CrudService<T extends GenericEntity, ID> {
     }
   }
 
+  /**
+   * Delete by id
+   * @param id Id of the entity to be deleted
+   */
   @Transactional
   public void deleteById(ID id) {
     T entity = em.find(type, id);
@@ -107,16 +164,30 @@ public abstract class CrudService<T extends GenericEntity, ID> {
     }
   }
 
+  /**
+   * Count all entities
+   * @return Amount of records
+   */
   public Integer count() {
     return ((Number) em.createNamedQuery(type.getSimpleName() + ".count")
             .getSingleResult())
             .intValue();
   }
 
+  /**
+   * Get all entities
+   * @return List of entities
+   */
   public List<T> getAllEntities() {
     return em.createNamedQuery(type.getSimpleName() + ".getAll").getResultList();
   }
 
+  /**
+   * Get all entities with pagination parameters
+   * @param offset Starting position
+   * @param limit The amount of entities
+   * @return List of entities
+   */
   public List<T> getAllEntitiesPagination(int offset, int limit) {
     return em.createNamedQuery(type.getSimpleName() + ".getAll")
             .setFirstResult(offset)

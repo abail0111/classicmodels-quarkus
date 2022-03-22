@@ -61,7 +61,7 @@ public class ProductResource extends CrudResource<Product, ProductDto, String, P
         int count;
         if (productLine != null && !productLine.isEmpty()) {
             products = service.filterByProductLine(productLine, offset, limit);
-            count = service.countByFilter();
+            count = service.countByFilter(productLine);
         } else {
             products = service.getAllEntitiesPagination(offset, limit);
             count = service.count();

@@ -18,7 +18,7 @@ import java.io.Serializable;
 })
 public class Product implements GenericEntity, Serializable {
 
-  @Id // ID Pattern: 'S<scale>_<id>' e.g. 'S12_1099'
+  @Id
   @Column(name = "productCode")
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
   @GenericGenerator(

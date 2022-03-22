@@ -12,6 +12,10 @@ import org.hibernate.type.Type;
 import java.io.Serializable;
 import java.util.Properties;
 
+/**
+ * Product ID Sequence Generator
+ * Custom sequence generator to create a product id with scale prefix
+ */
 public class ProductIdSequenceGenerator extends SequenceStyleGenerator {
 
     private String format;
@@ -19,6 +23,7 @@ public class ProductIdSequenceGenerator extends SequenceStyleGenerator {
     @Override
     public void configure(Type type, Properties params, ServiceRegistry serviceRegistry) throws MappingException {
         super.configure(LongType.INSTANCE, params, serviceRegistry);
+        // ID Pattern: 'S<scale>_<id>' e.g. 'S12_1099'
         this.format = "S%s_%d";
     }
 

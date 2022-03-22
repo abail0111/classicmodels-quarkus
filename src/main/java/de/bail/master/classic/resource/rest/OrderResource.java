@@ -61,7 +61,7 @@ public class OrderResource extends CrudResource<Order, OrderDto, Integer, OrderS
         int count;
         if (status != null && !status.isEmpty()) {
             orders = service.filterByStatus(status, offset, limit);
-            count = service.countByFilter();
+            count = service.countByFilter(status);
         } else {
             orders = service.getAllEntitiesPagination(offset, limit);
             count = service.count();

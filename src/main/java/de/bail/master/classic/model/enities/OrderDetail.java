@@ -47,10 +47,6 @@ public class OrderDetail implements GenericEntity, Serializable {
     return super.equals(obj);
   }
 
-  public Integer getOrderNumber() {
-    return orderNumber;
-  }
-
   public void setOrderNumber(Integer orderNumber) {
     this.orderNumber = orderNumber;
   }
