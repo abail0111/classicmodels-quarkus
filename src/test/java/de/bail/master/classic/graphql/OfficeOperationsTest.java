@@ -37,7 +37,7 @@ public class OfficeOperationsTest extends StaticGraphQLTest {
     public void setup() {
         // instantiating office object
         office = new Office();
-        office.setId("1");
+        office.setId(1);
         office.setCity("Berlin");
         office.setPhone("+49 12345 112233");
         office.setAddressLine1("997 Classic Street");
@@ -55,16 +55,16 @@ public class OfficeOperationsTest extends StaticGraphQLTest {
         employee.setOffice(office);
         employee.setReportsTo(employee);
         // mock office service
-        when(officeService.getEntityById(eq("1"))).thenReturn(office);
-        when(officeService.getEntityById(eq("2"))).thenThrow(new CustomNotFoundException());
+        when(officeService.getEntityById(eq(1))).thenReturn(office);
+        when(officeService.getEntityById(eq(2))).thenThrow(new CustomNotFoundException());
         when(officeService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(office));
         when(officeService.getAllEntities()).thenReturn(Collections.singletonList(office));
         when(officeService.count()).thenReturn(10);
         when(officeService.create(any(Office.class))).thenReturn(office);
-        when(officeService.update(argThat(new OfficeMatcher("1")))).thenReturn(office);
-        when(officeService.update(argThat(new OfficeMatcher("2")))).thenThrow(new CustomNotFoundException());
-        doNothing().when(officeService).deleteById(eq("1"));
-        doThrow(new CustomNotFoundException()).when(officeService).deleteById(eq("2"));
+        when(officeService.update(argThat(new OfficeMatcher(1)))).thenReturn(office);
+        when(officeService.update(argThat(new OfficeMatcher(2)))).thenThrow(new CustomNotFoundException());
+        doNothing().when(officeService).deleteById(eq(1));
+        doThrow(new CustomNotFoundException()).when(officeService).deleteById(eq(2));
         // mock employee service
         when(employeeService.getAllByOffice((anyList()))).thenReturn(Collections.singletonList(employee));
     }
@@ -186,7 +186,7 @@ public class OfficeOperationsTest extends StaticGraphQLTest {
 
     @Test
     public void testUpdate_Error_NotFound() {
-        office.setId("2");
+        office.setId(2);
         JsonObject variables = new JsonObject();
         variables.add("office", gson.toJsonTree(office));
         queryGraphQL("mutations", "updateOffice", variables)
@@ -257,9 +257,9 @@ public class OfficeOperationsTest extends StaticGraphQLTest {
      */
     public static class OfficeMatcher implements ArgumentMatcher<Office> {
 
-        private final String expectedId;
+        private final Integer expectedId;
 
-        public OfficeMatcher(String id) {
+        public OfficeMatcher(Integer id) {
             this.expectedId = id;
         }
 

@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/office")
 @Produces(MediaType.APPLICATION_JSON)
-public class OfficeResource extends CrudResource<Office, OfficeDto, String, OfficeService, OfficeMapper> {
+public class OfficeResource extends CrudResource<Office, OfficeDto, Integer, OfficeService, OfficeMapper> {
 
     public OfficeResource() {
         super("/office/");
@@ -39,7 +39,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, String, Offi
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read Office")
     @Override
-    public Response read(@PathParam("id") String id) {
+    public Response read(@PathParam("id") Integer id) {
         return super.read(id);
     }
 
@@ -58,7 +58,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, String, Offi
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Office")
     @Override
-    public Response update(@PathParam("id") String id, @Valid OfficeDto entity) {
+    public Response update(@PathParam("id") Integer id, @Valid OfficeDto entity) {
         return super.update(id, entity);
     }
 
@@ -66,7 +66,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, String, Offi
     @Path("{id}")
     @Operation(summary = "delete Office")
     @Override
-    public Response delete(@PathParam("id") String id) {
+    public Response delete(@PathParam("id") Integer id) {
         return super.delete(id);
     }
 

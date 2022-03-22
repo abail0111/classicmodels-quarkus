@@ -8,7 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @Traced
 @ApplicationScoped
-public class OfficeService extends CrudService<Office, String> {
+public class OfficeService extends CrudService<Office, Integer> {
 
     protected OfficeService() {
         super(Office.class);

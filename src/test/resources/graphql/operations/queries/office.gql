@@ -1,4 +1,4 @@
-query office($id: String){
+query office($id: Int){
     office(id: $id){
         addressLine1
         addressLine2

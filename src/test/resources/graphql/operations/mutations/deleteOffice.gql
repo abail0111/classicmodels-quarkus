@@ -1,4 +1,4 @@
-mutation deleteOffice($id: String){
+mutation deleteOffice($id: Int){
     deleteOffice(id: $id){
         addressLine1
         addressLine2

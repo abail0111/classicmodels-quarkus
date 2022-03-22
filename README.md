@@ -35,7 +35,7 @@ mysql> SET GLOBAL local_infile=1;
 # Create the ClassicModels database and load the schema and content
 mysql> create database classicmodels;
 mysql> use classicmodels;
-mysql> source create_classicmodels.sql;
+mysql> source create_classicmodels-auto_increment.sql;
 mysql> source load_classicmodels.sql;
 mysql> quit;
 ```

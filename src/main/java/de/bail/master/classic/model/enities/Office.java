@@ -15,7 +15,7 @@ public class Office implements GenericEntity, Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "officeCode")
-  private String id;
+  private Integer id;
 
   @NotNull
   private String city;
@@ -39,11 +39,11 @@ public class Office implements GenericEntity, Serializable {
   @NotNull
   private String territory;
 
-  public String getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(String officeCode) {
+  public void setId(Integer officeCode) {
     this.id = officeCode;
   }
 
@@ -113,6 +113,6 @@ public class Office implements GenericEntity, Serializable {
 
   @Override
   public String idToString() {
-    return id;
+    return id.toString();
   }
 }

@@ -34,7 +34,7 @@ public class OfficeResourceTest {
     public void setup() {
         // instantiating office object
         office = new Office();
-        office.setId("1");
+        office.setId(1);
         office.setCity("Berlin");
         office.setPhone("+49 12345 112233");
         office.setAddressLine1("997 Classic Street");
@@ -42,16 +42,16 @@ public class OfficeResourceTest {
         office.setPostalCode("10115");
         office.setTerritory("EMEA");
         // mock office service
-        when(officeService.getEntityById(eq("1"))).thenReturn(office);
-        when(officeService.getEntityById(eq("2"))).thenThrow(new CustomNotFoundException());
+        when(officeService.getEntityById(eq(1))).thenReturn(office);
+        when(officeService.getEntityById(eq(2))).thenThrow(new CustomNotFoundException());
         when(officeService.getAllEntitiesPagination(anyInt(), anyInt())).thenReturn(Collections.singletonList(office));
         when(officeService.getAllEntities()).thenReturn(Collections.singletonList(office));
         when(officeService.count()).thenReturn(10);
         when(officeService.create(any(Office.class))).thenReturn(office);
-        when(officeService.update(eq("1"), any(Office.class))).thenReturn(office);
-        when(officeService.update(eq("2"), any(Office.class))).thenThrow(new CustomNotFoundException());
-        doNothing().when(officeService).deleteById(eq("1"));
-        doThrow(new CustomNotFoundException()).when(officeService).deleteById(eq("2"));
+        when(officeService.update(eq(1), any(Office.class))).thenReturn(office);
+        when(officeService.update(eq(2), any(Office.class))).thenThrow(new CustomNotFoundException());
+        doNothing().when(officeService).deleteById(eq(1));
+        doThrow(new CustomNotFoundException()).when(officeService).deleteById(eq(2));
     }
 
     // ------------ Test Create ------------

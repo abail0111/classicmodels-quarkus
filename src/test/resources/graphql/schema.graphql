@@ -46,7 +46,7 @@ type Mutation {
   createProductLine(productLine: ProductLineInput): ProductLine
   deleteCustomer(id: Int!): Customer
   deleteEmployee(id: Int!): Employee
-  deleteOffice(id: String): Office
+  deleteOffice(id: Int): Office
   deleteOrder(id: Int!): Order
   deleteOrderDetail(order: Int!, product: String): OrderDetail
   deletePayment(checkNumber: String, customerNumber: Int!): Payment
@@ -68,7 +68,7 @@ type Office {
   city: String!
   country: String!
   employees: [Employee]
-  id: String
+  id: Int
   phone: String!
   postalCode: String!
   state: String
@@ -139,7 +139,7 @@ type Query {
   "Get a list of Employees"
   employees(limit: Int = 100, offset: Int = 0): [Employee]
   "Get Office by id"
-  office(id: String): Office
+  office(id: Int): Office
   "Get a list of Offices"
   offices: [Office]
   "Get Order by id"
@@ -194,7 +194,7 @@ input OfficeInput {
   addressLine2: String
   city: String!
   country: String!
-  id: String
+  id: Int
   phone: String!
   postalCode: String!
   state: String

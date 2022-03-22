@@ -58,7 +58,7 @@ public class EmployeeService extends CrudService<Employee, Integer> {
         return query.getResultList();
     }
 
-    public List<Employee> getAllByOffice(List<String> office) {
+    public List<Employee> getAllByOffice(List<Integer> office) {
         Query query = em.createNamedQuery("Employee.getAllByOffice");
         query.setParameter("office", office);
         return query.getResultList();

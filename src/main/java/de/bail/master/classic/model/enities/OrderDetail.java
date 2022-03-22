@@ -1,10 +1,6 @@
 package de.bail.master.classic.model.enities;
 
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -23,6 +19,7 @@ import java.util.Objects;
 public class OrderDetail implements GenericEntity, Serializable {
 
   @Id
+  @JsonbTransient
   @JoinColumn(name = "orderNumber", nullable = false)
   private Integer orderNumber;
 

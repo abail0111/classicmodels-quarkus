@@ -35,7 +35,7 @@ public class EmployeeResourceTest {
     public void setup() {
         // instantiating office object
         Office office = new Office();
-        office.setId("1");
+        office.setId(1);
         office.setCity("Berlin");
         office.setPhone("+49 12345 112233");
         office.setAddressLine1("997 Classic Street");

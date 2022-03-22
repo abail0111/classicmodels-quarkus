@@ -47,8 +47,8 @@ public class Order implements GenericEntity, Serializable {
     return id;
   }
 
-  public void setId(Integer orderNumber) {
-    this.id = orderNumber;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public LocalDateTime getOrderDate() {

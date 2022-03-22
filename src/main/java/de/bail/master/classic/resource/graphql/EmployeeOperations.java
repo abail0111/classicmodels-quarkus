@@ -37,7 +37,7 @@ public class EmployeeOperations {
     public List<List<Employee>> employees(@Source List<Office> offices) {
         // Batching employees for offices
         // load all employees by office id
-        List<String> officeIDs = offices.stream().map(Office::getId).collect(Collectors.toList());
+        List<Integer> officeIDs = offices.stream().map(Office::getId).collect(Collectors.toList());
         List<Employee> employees = service.getAllByOffice(officeIDs);
         // map employees to office
         Map<Office, List<Employee>> employeeMap = employees.stream().collect(Collectors.groupingBy(Employee::getOffice, HashMap::new, Collectors.toCollection(ArrayList::new)));

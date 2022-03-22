@@ -17,7 +17,7 @@ public class OfficeOperations {
 
     @Query("office")
     @Description("Get Office by id")
-    public Office getOffice(@Name("id") String id) {
+    public Office getOffice(@Name("id") Integer id) {
         return service.getEntityById(id);
     }
 
@@ -40,7 +40,7 @@ public class OfficeOperations {
     }
 
     @Mutation
-    public Office deleteOffice(String id) {
+    public Office deleteOffice(Integer id) {
         Office office = service.getEntityById(id);
         service.deleteById(id);
         return office;
