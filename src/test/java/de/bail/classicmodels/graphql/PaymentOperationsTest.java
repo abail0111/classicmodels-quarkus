@@ -2,18 +2,25 @@ package de.bail.classicmodels.graphql;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import de.bail.classicmodels.model.enities.Customer;
+import de.bail.classicmodels.model.enities.Order;
 import de.bail.classicmodels.model.enities.Payment;
+import de.bail.classicmodels.resource.graphql.PaymentOperations;
 import de.bail.classicmodels.service.PaymentService;
 import de.bail.classicmodels.util.CustomNotFoundException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
+import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasKey;
@@ -22,6 +29,9 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class PaymentOperationsTest extends StaticGraphQLTest {
+
+    @Inject
+    PaymentOperations paymentOperations;
 
     @InjectMock
     PaymentService paymentService;
@@ -49,6 +59,34 @@ public class PaymentOperationsTest extends StaticGraphQLTest {
         when(paymentService.update(argThat(new PaymentMatcher(2,"2")))).thenThrow(new CustomNotFoundException());
         doNothing().when(paymentService).deleteById(eq(new Payment.PaymentId(1,"1")));
         doThrow(new CustomNotFoundException()).when(paymentService).deleteById(eq(new Payment.PaymentId(2,"2")));
+    }
+
+    // ------------ Test Payment Resolver ------------
+
+    @Test
+    public void testResolver_payment_customer() {
+        // create customers
+        ArrayList<Customer> customers = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Customer customer = new Customer();
+            customer.setId(i);
+            customers.add(customer);
+        }
+        // create payment list with customer
+        // in reversed order to check proper mapping
+        ArrayList<Payment> payments = new ArrayList<>();
+        for (int i = 9; i >= 0; i--) {
+            Payment payment = new Payment();
+            payment.setCustomerNumber(i);
+            payments.add(payment);
+        }
+        // mock payment service
+        when(paymentService.getAllByCustomer(anyList())).thenReturn(payments);
+        // test resolver
+        List<List<Payment>> paymentsResolved = paymentOperations.payments(customers);
+        Assertions.assertArrayEquals(new int[]{0,1,2,3,4,5,6,7,8,9},
+                paymentsResolved.stream().mapToInt(list -> list.get(0).getCustomerNumber()).toArray(),
+                "The list of payments should be in the following shape: {{customer::1},{customer::2},{customer::3},...,{customer::9}}");
     }
 
     // ------------ Test Queries ------------

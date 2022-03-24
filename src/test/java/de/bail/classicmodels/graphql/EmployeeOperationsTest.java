@@ -5,16 +5,21 @@ import com.google.gson.JsonObject;
 import de.bail.classicmodels.model.enities.Customer;
 import de.bail.classicmodels.model.enities.Employee;
 import de.bail.classicmodels.model.enities.Office;
+import de.bail.classicmodels.resource.graphql.EmployeeOperations;
 import de.bail.classicmodels.service.CustomerService;
 import de.bail.classicmodels.service.EmployeeService;
 import de.bail.classicmodels.util.CustomNotFoundException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasKey;
@@ -23,6 +28,9 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class EmployeeOperationsTest extends StaticGraphQLTest {
+
+    @Inject
+    EmployeeOperations employeeOperations;
 
     @InjectMock
     EmployeeService employeeService;
@@ -76,6 +84,37 @@ public class EmployeeOperationsTest extends StaticGraphQLTest {
         doThrow(new CustomNotFoundException()).when(employeeService).deleteById(eq(2));
         // mock customer service
         when(customerService.getAllCustomerByEmployees((anyList()))).thenReturn(Collections.singletonList(customer));
+    }
+
+    // ------------ Test Employee Resolver ------------
+
+    @Test
+    public void testResolver_employee_office() {
+        // create offices
+        ArrayList<Office> offices = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Office office = new Office();
+            office.setId(i);
+            offices.add(office);
+        }
+        // create employee list with office
+        // in reversed order to check proper mapping
+        ArrayList<Employee> employees = new ArrayList<>();
+        for (int i = 9; i >= 0; i--) {
+            Office office = new Office();
+            office.setId(i);
+            Employee employee = new Employee();
+            employee.setId(i);
+            employee.setOffice(office);
+            employees.add(employee);
+        }
+        // mock employee service
+        when(employeeService.getAllByOffice(anyList())).thenReturn(employees);
+        // test resolver
+        List<List<Employee>> employeesResolved = employeeOperations.employees(offices);
+        Assertions.assertArrayEquals(new int[]{0,1,2,3,4,5,6,7,8,9},
+                employeesResolved.stream().mapToInt(list -> list.get(0).getId()).toArray(),
+                "The list of employees should be in the following shape: {{office::1},{office::2},{office::3},...,{office::9}}");
     }
 
     // ------------ Test Queries ------------

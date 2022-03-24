@@ -1,10 +1,9 @@
 # Classic Models API
 
-The Classic Models API project is a Quarkus implementation of a 
-RESTful and GraphQL web service based on the
+The Classic Models API project is a Quarkus implementation of the
 [BIRT](https://eclipse.github.io/birt-website/docs/template-sample-database/) /
 [MySQL](https://www.mysqltutorial.org/mysql-sample-database.aspx)
-sample database.
+sample database as RESTful and GraphQL web service.
 
 Installed Features:
 

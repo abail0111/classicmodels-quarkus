@@ -40,9 +40,9 @@ public class EmployeeOperations {
         List<Integer> officeIDs = offices.stream().map(Office::getId).collect(Collectors.toList());
         List<Employee> employees = service.getAllByOffice(officeIDs);
         // map employees to office
-        Map<Office, List<Employee>> employeeMap = employees.stream().collect(Collectors.groupingBy(Employee::getOffice, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        Map<Integer, List<Employee>> employeeMap = employees.stream().collect(Collectors.groupingBy(e -> e.getOffice().getId(), HashMap::new, Collectors.toCollection(ArrayList::new)));
         List<List<Employee>> results = new ArrayList<>();
-        offices.forEach(office -> results.add(employeeMap.get(office)));
+        offices.forEach(office -> results.add(employeeMap.get(office.getId())));
         return results;
     }
 

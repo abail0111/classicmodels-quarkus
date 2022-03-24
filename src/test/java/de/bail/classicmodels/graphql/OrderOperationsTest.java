@@ -2,21 +2,24 @@ package de.bail.classicmodels.graphql;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import de.bail.classicmodels.model.enities.Customer;
-import de.bail.classicmodels.model.enities.Order;
-import de.bail.classicmodels.model.enities.OrderDetail;
-import de.bail.classicmodels.model.enities.Product;
+import de.bail.classicmodels.model.enities.*;
+import de.bail.classicmodels.resource.graphql.OrderDetailOperations;
+import de.bail.classicmodels.resource.graphql.OrderOperations;
 import de.bail.classicmodels.util.CustomNotFoundException;
 import de.bail.classicmodels.service.OrderDetailService;
 import de.bail.classicmodels.service.OrderService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
+import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasKey;
@@ -25,6 +28,12 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class OrderOperationsTest extends StaticGraphQLTest {
+
+    @Inject
+    OrderDetailOperations orderDetailOperations;
+
+    @Inject
+    OrderOperations orderOperations;
 
     @InjectMock
     OrderService orderService;
@@ -69,6 +78,63 @@ public class OrderOperationsTest extends StaticGraphQLTest {
         doThrow(new CustomNotFoundException()).when(orderService).deleteById(eq(2));
         // mock order detail service
         when(orderDetailService.getAllByOrder(anyInt(), anyInt(), anyInt())).thenReturn(Collections.singletonList(orderDetail));
+    }
+
+    // ------------ Test Order and OrderDetail Resolver ------------
+
+    @Test
+    public void testResolver_order_customer() {
+        // create customers
+        ArrayList<Customer> customers = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Customer customer = new Customer();
+            customer.setId(i);
+            customers.add(customer);
+        }
+        // create order list with customer
+        // in reversed order to check proper mapping
+        ArrayList<Order> orders = new ArrayList<>();
+        for (int i = 9; i >= 0; i--) {
+            Customer customer = new Customer();
+            customer.setId(i);
+            Order order = new Order();
+            order.setId(i);
+            order.setCustomer(customer);
+            orders.add(order);
+        }
+        // mock order service
+        when(orderService.getAllByCustomer(anyList())).thenReturn(orders);
+        // test resolver
+        List<List<Order>> ordersResolved = orderOperations.orders(customers);
+        Assertions.assertArrayEquals(new int[]{0,1,2,3,4,5,6,7,8,9},
+                ordersResolved.stream().mapToInt(list -> list.get(0).getId()).toArray(),
+                "The list of orders should be in the following shape: {{customer::1},{customer::2},{customer::3},...,{customer::9}}");
+    }
+
+    @Test
+    public void testResolver_orderDetail_order() {
+        // create orders
+        ArrayList<Order> orders = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Order order = new Order();
+            order.setId(i);
+            orders.add(order);
+        }
+        // create order detail list with order
+        // in reversed order to check proper mapping
+        ArrayList<OrderDetail> orderDetails = new ArrayList<>();
+        for (int i = 9; i >= 0; i--) {
+            OrderDetail detail = new OrderDetail();
+            detail.setOrderNumber(i);
+            orderDetails.add(detail);
+        }
+        // mock order detail service
+        when(orderDetailService.getAllByOrders(anyList())).thenReturn(orderDetails);
+        // test resolver
+        List<List<OrderDetail>> ordersResolved = orderDetailOperations.details(orders);
+        Assertions.assertArrayEquals(new int[]{0,1,2,3,4,5,6,7,8,9},
+                ordersResolved.stream().mapToInt(list -> list.get(0).getOrder()).toArray(),
+                "The list of orders should be in the following shape: {{order::1},{order::2},{order::3},...,{order::9}}");
     }
 
     // ------------ Test Queries ------------

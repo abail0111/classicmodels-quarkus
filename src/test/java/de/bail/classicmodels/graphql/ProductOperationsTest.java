@@ -2,17 +2,24 @@ package de.bail.classicmodels.graphql;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import de.bail.classicmodels.model.enities.Order;
+import de.bail.classicmodels.model.enities.OrderDetail;
 import de.bail.classicmodels.model.enities.Product;
 import de.bail.classicmodels.model.enities.ProductLine;
+import de.bail.classicmodels.resource.graphql.ProductOperations;
 import de.bail.classicmodels.service.ProductService;
 import de.bail.classicmodels.util.CustomNotFoundException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasKey;
@@ -21,6 +28,9 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class ProductOperationsTest extends StaticGraphQLTest {
+
+    @Inject
+    ProductOperations productOperations;
 
     @InjectMock
     ProductService productService;
@@ -56,6 +66,35 @@ public class ProductOperationsTest extends StaticGraphQLTest {
         when(productService.update(argThat(new ProductMatcher("2")))).thenThrow(new CustomNotFoundException());
         doNothing().when(productService).deleteById(eq("1"));
         doThrow(new CustomNotFoundException()).when(productService).deleteById(eq("2"));
+    }
+
+    // ------------ Test Product Resolver ------------
+
+    @Test
+    public void testResolver_product_orderDetail() {
+        // create products
+        ArrayList<Product> products = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Product product = new Product();
+            product.setId(String.valueOf(i));
+            products.add(product);
+        }
+        // create product detail list with order
+        ArrayList<OrderDetail> orderDetails = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Product product = new Product();
+            product.setId(String.valueOf(i));
+            OrderDetail detail = new OrderDetail();
+            detail.setProduct(product);
+            orderDetails.add(detail);
+        }
+        // mock order detail service
+        when(productService.getByIDs(anyList())).thenReturn(products);
+        // test resolver
+        List<List<Product>> ordersResolved = productOperations.product(orderDetails);
+        Assertions.assertArrayEquals(new String[]{"0","1","2","3","4","5","6","7","8","9"},
+                ordersResolved.stream().map(list -> list.get(0).getId()).toArray(),
+                "The list of products should be in the following shape: {{id::1},{id::2},{id::3},...,{id::9}}");
     }
 
     // ------------ Test Queries ------------

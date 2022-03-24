@@ -44,9 +44,9 @@ public class OrderOperations {
         List<Integer> customerIDs = customers.stream().map(Customer::getId).collect(Collectors.toList());
         List<Order> orders = service.getAllByCustomer(customerIDs);
         // map orders to customer list
-        Map<Customer, List<Order>> orderMap = orders.stream().collect(Collectors.groupingBy(Order::getCustomer, HashMap::new, Collectors.toCollection(ArrayList::new)));
+        Map<Integer, List<Order>> orderMap = orders.stream().collect(Collectors.groupingBy(o -> o.getCustomer().getId(), HashMap::new, Collectors.toCollection(ArrayList::new)));
         List<List<Order>> results = new ArrayList<>();
-        customers.forEach(customer -> results.add(orderMap.get(customer)));
+        customers.forEach(customer -> results.add(orderMap.get(customer.getId())));
         return results;
     }
 

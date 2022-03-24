@@ -4,17 +4,22 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.bail.classicmodels.model.enities.Customer;
 import de.bail.classicmodels.model.enities.Employee;
+import de.bail.classicmodels.resource.graphql.CustomerOperations;
 import de.bail.classicmodels.service.PaymentService;
 import de.bail.classicmodels.util.CustomNotFoundException;
 import de.bail.classicmodels.service.CustomerService;
 import de.bail.classicmodels.service.OrderService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -24,6 +29,9 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class CustomerOperationsTest extends StaticGraphQLTest {
+
+    @Inject
+    CustomerOperations customerOperations;
 
     @InjectMock
     CustomerService customerService;
@@ -71,6 +79,37 @@ public class CustomerOperationsTest extends StaticGraphQLTest {
         when(paymentService.getAllByCustomer(anyList())).thenReturn((Collections.emptyList()));
         // mock order service
         when(orderService.getAllByCustomer(anyList())).thenReturn((Collections.emptyList()));
+    }
+
+    // ------------ Test Customer Resolver ------------
+
+    @Test
+    public void testResolver_customer_employee() {
+        // create employees
+        ArrayList<Employee> employees = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Employee employee = new Employee();
+            employee.setId(i);
+            employees.add(employee);
+        }
+        // create customer list with employees
+        // in reversed order to check proper mapping
+        ArrayList<Customer> customers = new ArrayList<>();
+        for (int i = 9; i >= 0; i--) {
+            Employee employee = new Employee();
+            employee.setId(i);
+            Customer customer = new Customer();
+            customer.setId(i);
+            customer.setSalesRepEmployee(employee);
+            customers.add(customer);
+        }
+        // mock customer service
+        when(customerService.getAllCustomerByEmployees(anyList())).thenReturn(customers);
+        // test resolver
+        List<List<Customer>> customerResolved = customerOperations.customer(employees);
+        Assertions.assertArrayEquals(new int[]{0,1,2,3,4,5,6,7,8,9},
+                customerResolved.stream().mapToInt(list -> list.get(0).getId()).toArray(),
+                "The list of customers should be in the following shape: {{salesRep::1},{salesRep::2},{salesRep::3},...,{salesRep::9}}");
     }
 
     // ------------ Test Queries ------------
