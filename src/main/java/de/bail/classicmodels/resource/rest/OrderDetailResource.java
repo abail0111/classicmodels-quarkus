@@ -2,11 +2,10 @@ package de.bail.classicmodels.resource.rest;
 
 import de.bail.classicmodels.model.dto.OrderDetailDto;
 import de.bail.classicmodels.model.enities.OrderDetail;
-import de.bail.classicmodels.service.OrderDetailService;
 import de.bail.classicmodels.model.mapper.OrderDetailMapper;
+import de.bail.classicmodels.service.OrderDetailService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -24,11 +23,11 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     @Override
     public void linkDTO(OrderDetailDto dto) {
         if (dto != null && dto.getOrder() != null && dto.getOrder().getId() != null && dto.getOrder().getId() != 0) {
-            Link link = linkService.BuildLinkRelated("/order/" + dto.getOrder().getId(), MediaType.APPLICATION_JSON);
+            Link link = getLinkService().BuildLinkRelated("/order/" + dto.getOrder().getId(), MediaType.APPLICATION_JSON);
             dto.getOrder().setLink(link);
         }
         if (dto != null && dto.getProduct() != null && dto.getProduct().getId() != null) {
-            Link link = linkService.BuildLinkRelated("/product/" + dto.getProduct().getId(), MediaType.APPLICATION_JSON);
+            Link link = getLinkService().BuildLinkRelated("/product/" + dto.getProduct().getId(), MediaType.APPLICATION_JSON);
             dto.getProduct().setLink(link);
         }
     }
@@ -38,7 +37,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new OrderDetail")
     @Override
-    public Response create(@Valid OrderDetailDto entity) {
+    public Response create(OrderDetailDto entity) {
         return super.create(entity);
     }
 
@@ -50,10 +49,10 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
                          @QueryParam("offset") @DefaultValue("0") int offset,
                          @QueryParam("limit") @DefaultValue("100") int limit) {
 
-        List<OrderDetail> entities = service.getAllByOrder(order, offset, limit);
-        List<OrderDetailDto> dto = mapper.toResourceList(entities);
+        List<OrderDetail> entities = getService().getAllByOrder(order, offset, limit);
+        List<OrderDetailDto> dto = getMapper().toResourceList(entities);
         dto.forEach(this::linkDTO);
-        int count = service.getAllByOrderCount(order);
+        int count = getService().getAllByOrderCount(order);
         return Response.ok(dto).header("x-total-count", count).build();
     }
 
@@ -75,7 +74,7 @@ public class OrderDetailResource extends CrudResource<OrderDetail, OrderDetailDt
     @Operation(summary = "update OrderDetail")
     public Response update(@PathParam("order") Integer order,
                            @PathParam("product") String product,
-                           @Valid OrderDetailDto entity) {
+                           OrderDetailDto entity) {
 
         return super.update(new OrderDetail.OrderDetailId(order, product), entity);
     }

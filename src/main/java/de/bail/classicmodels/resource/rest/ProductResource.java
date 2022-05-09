@@ -1,12 +1,11 @@
 package de.bail.classicmodels.resource.rest;
 
+import de.bail.classicmodels.model.dto.ProductDto;
 import de.bail.classicmodels.model.enities.Product;
 import de.bail.classicmodels.model.mapper.ProductMapper;
-import de.bail.classicmodels.model.dto.ProductDto;
 import de.bail.classicmodels.service.ProductService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -24,7 +23,7 @@ public class ProductResource extends CrudResource<Product, ProductDto, String, P
     @Override
     public void linkDTO(ProductDto dto) {
         if (dto != null && dto.getProductLine() != null && dto.getProductLine().getId() != null) {
-            Link link = linkService.BuildLinkRelated("/productline/" + dto.getProductLine().getId(), MediaType.APPLICATION_JSON);
+            Link link = getLinkService().BuildLinkRelated("/productline/" + dto.getProductLine().getId(), MediaType.APPLICATION_JSON);
             dto.getProductLine().setLink(link);
         }
     }
@@ -34,7 +33,7 @@ public class ProductResource extends CrudResource<Product, ProductDto, String, P
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new Product")
     @Override
-    public Response create(@Valid ProductDto entity) {
+    public Response create(ProductDto entity) {
         return super.create(entity);
     }
 
@@ -59,13 +58,13 @@ public class ProductResource extends CrudResource<Product, ProductDto, String, P
         List<Product> products;
         int count;
         if (productLine != null && !productLine.isEmpty()) {
-            products = service.filterByProductLine(productLine, offset, limit);
-            count = service.countByFilter(productLine);
+            products = getService().filterByProductLine(productLine, offset, limit);
+            count = getService().countByFilter(productLine);
         } else {
-            products = service.getAllEntitiesPagination(offset, limit);
-            count = service.count();
+            products = getService().getAllEntitiesPagination(offset, limit);
+            count = getService().count();
         }
-        List<ProductDto> dto = mapper.toResourceList(products);
+        List<ProductDto> dto = getMapper().toResourceList(products);
         dto.forEach(this::linkDTO);
         return Response.ok(dto).header("x-total-count", count).build();
     }
@@ -76,7 +75,7 @@ public class ProductResource extends CrudResource<Product, ProductDto, String, P
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Product")
     @Override
-    public Response update(@PathParam("id") String id, @Valid ProductDto entity) {
+    public Response update(@PathParam("id") String id, ProductDto entity) {
         return super.update(id, entity);
     }
 

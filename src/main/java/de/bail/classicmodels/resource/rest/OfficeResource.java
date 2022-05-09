@@ -6,7 +6,6 @@ import de.bail.classicmodels.model.mapper.OfficeMapper;
 import de.bail.classicmodels.service.OfficeService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,7 +28,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, Integer, Off
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new Office")
     @Override
-    public Response create(@Valid OfficeDto entity) {
+    public Response create(OfficeDto entity) {
         return super.create(entity);
     }
 
@@ -57,7 +56,7 @@ public class OfficeResource extends CrudResource<Office, OfficeDto, Integer, Off
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Office")
     @Override
-    public Response update(@PathParam("id") Integer id, @Valid OfficeDto entity) {
+    public Response update(@PathParam("id") Integer id, OfficeDto entity) {
         return super.update(id, entity);
     }
 

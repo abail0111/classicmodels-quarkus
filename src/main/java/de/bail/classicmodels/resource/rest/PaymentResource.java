@@ -1,12 +1,11 @@
 package de.bail.classicmodels.resource.rest;
 
+import de.bail.classicmodels.model.dto.PaymentDto;
 import de.bail.classicmodels.model.enities.Payment;
 import de.bail.classicmodels.model.mapper.PaymentMapper;
-import de.bail.classicmodels.model.dto.PaymentDto;
 import de.bail.classicmodels.service.PaymentService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -25,7 +24,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
     @Override
     public void linkDTO(PaymentDto dto) {
         if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != null && dto.getCustomer().getId() != 0) {
-            Link link = linkService.BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
+            Link link = getLinkService().BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
             dto.getCustomer().setLink(link);
         }
     }
@@ -35,7 +34,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new Payment")
     @Override
-    public Response create(@Valid PaymentDto entity) {
+    public Response create(PaymentDto entity) {
         return super.create(entity);
     }
 
@@ -47,10 +46,10 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
                          @QueryParam("offset") @DefaultValue("0") int offset,
                          @QueryParam("limit") @DefaultValue("100") int limit) {
 
-            List<Payment> entities = service.getAllByCustomer(Collections.singletonList(customerNumber));
-            List<PaymentDto> dto = mapper.toResourceList(entities);
+            List<Payment> entities = getService().getAllByCustomer(Collections.singletonList(customerNumber));
+            List<PaymentDto> dto = getMapper().toResourceList(entities);
             dto.forEach(this::linkDTO);
-            int count = service.getAllByCustomerCount(customerNumber);
+            int count = getService().getAllByCustomerCount(customerNumber);
             return Response.ok(dto).header("x-total-count", count).build();
     }
 
@@ -81,7 +80,7 @@ public class PaymentResource extends CrudResource<Payment, PaymentDto, Payment.P
     @Operation(summary = "update Payment")
     public Response update(@PathParam("customer") Integer customerNumber,
                            @PathParam("checkNumber") String checkNumber,
-                           @Valid PaymentDto entity) {
+                           PaymentDto entity) {
         return super.update(new Payment.PaymentId(customerNumber, checkNumber), entity);
     }
 

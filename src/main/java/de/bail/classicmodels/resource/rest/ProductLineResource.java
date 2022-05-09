@@ -6,7 +6,6 @@ import de.bail.classicmodels.model.mapper.ProductLineMapper;
 import de.bail.classicmodels.service.ProductLineService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,7 +28,7 @@ public class ProductLineResource extends CrudResource<ProductLine, ProductLineDt
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new ProductLine")
     @Override
-    public Response create(@Valid ProductLineDto entity) {
+    public Response create(ProductLineDto entity) {
         return super.create(entity);
     }
 
@@ -57,7 +56,7 @@ public class ProductLineResource extends CrudResource<ProductLine, ProductLineDt
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update ProductLine")
     @Override
-    public Response update(@PathParam("id") String id, @Valid ProductLineDto entity) {
+    public Response update(@PathParam("id") String id, ProductLineDto entity) {
         return super.update(id, entity);
     }
 

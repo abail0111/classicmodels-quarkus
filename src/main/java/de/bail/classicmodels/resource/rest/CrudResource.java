@@ -21,15 +21,15 @@ import java.util.List;
 public abstract class CrudResource<T extends GenericEntity, K, ID, S extends CrudService<T, ID>, M extends GenericMapper<T, K>> {
 
     @Inject
-    public LinkService linkService;
+    private LinkService linkService;
 
     @Inject
-    public S service;
+    private S service;
 
     @Inject
-    public M mapper;
+    private M mapper;
 
-    public final String location;
+    private final String location;
 
     /**
      * Default constructor.
@@ -126,5 +126,21 @@ public abstract class CrudResource<T extends GenericEntity, K, ID, S extends Cru
     public Response delete(ID id) {
         service.deleteById(id);
         return Response.status(Response.Status.OK).build();
+    }
+
+    public LinkService getLinkService() {
+        return linkService;
+    }
+
+    public S getService() {
+        return service;
+    }
+
+    public M getMapper() {
+        return mapper;
+    }
+
+    public String getLocation() {
+        return location;
     }
 }

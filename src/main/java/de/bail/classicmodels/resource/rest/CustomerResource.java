@@ -1,23 +1,21 @@
 package de.bail.classicmodels.resource.rest;
 
-import de.bail.classicmodels.model.mapper.CustomerDetailMapper;
-import de.bail.classicmodels.model.mapper.CustomerMapper;
-import de.bail.classicmodels.model.mapper.OrderMapperNoCustomer;
-import de.bail.classicmodels.model.mapper.PaymentMapperNoCustomer;
 import de.bail.classicmodels.model.dto.CustomerDetailDto;
 import de.bail.classicmodels.model.dto.CustomerDto;
 import de.bail.classicmodels.model.dto.OrderDto;
 import de.bail.classicmodels.model.dto.PaymentDto;
 import de.bail.classicmodels.model.enities.Customer;
+import de.bail.classicmodels.model.mapper.CustomerDetailMapper;
+import de.bail.classicmodels.model.mapper.CustomerMapper;
+import de.bail.classicmodels.model.mapper.OrderMapperNoCustomer;
+import de.bail.classicmodels.model.mapper.PaymentMapperNoCustomer;
 import de.bail.classicmodels.service.CustomerService;
 import de.bail.classicmodels.service.OrderService;
 import de.bail.classicmodels.service.PaymentService;
 import de.bail.classicmodels.util.VCard;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.opentracing.Traced;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -48,23 +46,21 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     }
 
     @Override
-    @Traced
     public void linkDTO(CustomerDto dto) {
         if (dto != null && dto.getSalesRepEmployee() != null && dto.getSalesRepEmployee().getId() != 0) {
-            Link link = linkService.BuildLinkRelated("/employee/" + dto.getSalesRepEmployee().getId(), MediaType.APPLICATION_JSON);
+            Link link = getLinkService().BuildLinkRelated("/employee/" + dto.getSalesRepEmployee().getId(), MediaType.APPLICATION_JSON);
             dto.getSalesRepEmployee().setLink(link);
         }
     }
 
-    @Traced
     public void linkDetailDTO(CustomerDetailDto dto) {
         if (dto != null) {
             if (dto.getSalesRepEmployee() != null && dto.getSalesRepEmployee().getReportsTo() != null && dto.getSalesRepEmployee().getReportsTo().getId() != 0) {
-                Link link = linkService.BuildLinkRelated("/employee/" + dto.getSalesRepEmployee().getReportsTo().getId(), MediaType.APPLICATION_JSON);
+                Link link = getLinkService().BuildLinkRelated("/employee/" + dto.getSalesRepEmployee().getReportsTo().getId(), MediaType.APPLICATION_JSON);
                 dto.getSalesRepEmployee().getReportsTo().setLink(link);
             }
             if (dto.getSalesRepEmployee() != null && dto.getSalesRepEmployee().getOffice() != null && dto.getSalesRepEmployee().getOffice().getId() != null) {
-                Link link = linkService.BuildLinkRelated("/office/" + dto.getSalesRepEmployee().getOffice().getId(), MediaType.APPLICATION_JSON);
+                Link link = getLinkService().BuildLinkRelated("/office/" + dto.getSalesRepEmployee().getOffice().getId(), MediaType.APPLICATION_JSON);
                 dto.getSalesRepEmployee().getOffice().setLink(link);
             }
         }
@@ -75,7 +71,7 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new Customer")
     @Override
-    public Response create(@Valid CustomerDto entity) {
+    public Response create(CustomerDto entity) {
         return super.create(entity);
     }
 
@@ -95,7 +91,7 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "read Customer with sales rep name and payment list")
     public Response readDetails(@PathParam("id") Integer id) {
-        Customer entity = service.getEntityById(id);
+        Customer entity = getService().getEntityById(id);
         CustomerDetailDto dto = detailMapper.toResource(entity);
         // fetch payments
         List<PaymentDto> payments = paymentMapper.toResourceList(
@@ -115,7 +111,7 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     @Consumes("text/x-vcard")
     @Produces("text/x-vcard; profile=\"vcard\"; charset=iso-8859-1")
     public Response vcard(@PathParam("id") Integer id) {
-        Customer customer = service.getEntityById(id);
+        Customer customer = getService().getEntityById(id);
         return Response.ok(VCard.createFromCustomer(customer)).build();
     }
 
@@ -149,7 +145,7 @@ public class CustomerResource extends CrudResource<Customer, CustomerDto, Intege
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Customer")
     @Override
-    public Response update(@PathParam("id") Integer id, @Valid CustomerDto entity) {
+    public Response update(@PathParam("id") Integer id, CustomerDto entity) {
         return super.update(id, entity);
     }
 

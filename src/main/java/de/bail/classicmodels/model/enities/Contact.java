@@ -12,13 +12,11 @@ public interface Contact {
     @NotNull
     String getFirstName();
 
-    @NotNull
     void setFirstName(String firstName);
 
     @NotNull
     String getLastName();
 
-    @NotNull
     void setLastName(String lastName);
 
 }

@@ -6,7 +6,6 @@ import de.bail.classicmodels.model.mapper.OrderMapper;
 import de.bail.classicmodels.service.OrderService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -24,7 +23,7 @@ public class OrderResource extends CrudResource<Order, OrderDto, Integer, OrderS
     @Override
     public void linkDTO(OrderDto dto) {
         if (dto != null && dto.getCustomer() != null && dto.getCustomer().getId() != 0) {
-            Link link = linkService.BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
+            Link link = getLinkService().BuildLinkRelated("/customer/" + dto.getCustomer().getId(), MediaType.APPLICATION_JSON);
             dto.getCustomer().setLink(link);
         }
     }
@@ -34,7 +33,7 @@ public class OrderResource extends CrudResource<Order, OrderDto, Integer, OrderS
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "create new Order")
     @Override
-    public Response create(@Valid OrderDto entity) {
+    public Response create(OrderDto entity) {
         return super.create(entity);
     }
 
@@ -59,13 +58,13 @@ public class OrderResource extends CrudResource<Order, OrderDto, Integer, OrderS
         List<Order> orders;
         int count;
         if (status != null && !status.isEmpty()) {
-            orders = service.filterByStatus(status, offset, limit);
-            count = service.countByFilter(status);
+            orders = getService().filterByStatus(status, offset, limit);
+            count = getService().countByFilter(status);
         } else {
-            orders = service.getAllEntitiesPagination(offset, limit);
-            count = service.count();
+            orders = getService().getAllEntitiesPagination(offset, limit);
+            count = getService().count();
         }
-        List<OrderDto> dto = mapper.toResourceList(orders);
+        List<OrderDto> dto = getMapper().toResourceList(orders);
         dto.forEach(this::linkDTO);
         return Response.ok(dto).header("x-total-count", count).build();
     }
@@ -76,7 +75,7 @@ public class OrderResource extends CrudResource<Order, OrderDto, Integer, OrderS
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "update Order")
     @Override
-    public Response update(@PathParam("id") Integer id, @Valid OrderDto entity) {
+    public Response update(@PathParam("id") Integer id, OrderDto entity) {
         return super.update(id, entity);
     }
 
