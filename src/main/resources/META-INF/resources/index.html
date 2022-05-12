@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>classicmodels - 1.0.0-SNAPSHOT</title>
+    <title>Classic Models API (JEE)</title>
     <style>
         h1, h2, h3, h4, h5, h6 {
             margin-bottom: 0.5rem;
@@ -109,34 +109,27 @@
 <body>
 
 <div class="banner lead">
-    Your new Cloud-Native application is ready!
+    Classic Models API (JEE)
 </div>
 
 <div class="container">
     <div class="left-column">
-        <p class="lead"> Congratulations, you have created a new Quarkus cloud application.</p>
+        <p> Quarkus now ships with a <a href="/q/dev/">Dev UI</a> (available in dev mode only).</p>
 
-        <h2>What is this page?</h2>
-
-        <p>This page is served by Quarkus. The source is in
-            <code>src/main/resources/META-INF/resources/index.html</code>.</p>
-
-        <h2>What are your next steps?</h2>
-
-        <p>If not already done, run the application in <em>dev mode</em> using: <code>./mvnw compile quarkus:dev</code>.
-        </p>
+        <h2>GraphQL</h2>
+        <p><code>POST</code> http://localhost:8081/graphql</p>
         <ul>
-            <li>Your static assets are located in <code>src/main/resources/META-INF/resources</code>.</li>
-            <li>Configure your application in <code>src/main/resources/application.properties</code>.</li>
-            <li>Quarkus now ships with a <a href="/q/dev/">Dev UI</a> (available in dev mode only)</li>
-            <li>Play with the provided code located in <code>src/main/java</code>:</li>
+            <li>Create new queries with <a href="/q/graphql-ui/">GraphiQL</a></li>
+            <li>Download the GraphQL <a href="/graphql/schema.graphql">Schema</a></p></li>
         </ul>
-                <div class="provided-code">
-            <h3>RESTEasy JAX-RS</h3>
-            <p>Easily start your RESTful Web Services</p>
-            <p><code>@Path: <a href="/hello" class="path-link" target="_blank">/hello</a></code></p>
-            <p><a href="https://quarkus.io/guides/getting-started#the-jax-rs-resources" class="guide-link" target="_blank">Related guide section...</a></p>
-        </div>
+
+        <h2>Resources</h2>
+        <ul>
+            <li>Download the <a href="/q/openapi/">OpenAPI Document</a></li>
+            <li>Visualize all resources with <a href="/q/swagger-ui/">Swagger UI</a></p></li>
+        </ul>
+
+
 
     </div>
     <div class="right-column">
@@ -147,19 +140,6 @@
                 <li>ArtifactId: <code>classicmodels</code></li>
                 <li>Version: <code>1.0.0-SNAPSHOT</code></li>
                 <li>Quarkus Version: <code>2.6.1.Final</code></li>
-            </ul>
-        </div>
-        <div class="right-section">
-            <h3>Do you like Quarkus?</h3>
-            <ul>
-                <li>Go give it a star on <a href="https://github.com/quarkusio/quarkus">GitHub</a>.</li>
-            </ul>
-        </div>
-        <div class="right-section">
-            <h3>Selected extensions guides</h3>
-            <ul>
-                <li title="Define your persistent model with Hibernate ORM and JPA"><a href="https://quarkus.io/guides/hibernate-orm" target="_blank">Hibernate ORM guide</a></li>
-                <li title="REST endpoint framework implementing JAX-RS and more"><a href="https://quarkus.io/guides/rest-json" target="_blank">RESTEasy JAX-RS guide</a></li>
             </ul>
         </div>
         <div class="right-section">

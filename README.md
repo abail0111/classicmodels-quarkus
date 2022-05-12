@@ -1,9 +1,9 @@
-# Classic Models API
+# Classic Models API (Quarkus)
 
 The Classic Models API project is a Quarkus implementation of the
 [BIRT](https://eclipse.github.io/birt-website/docs/template-sample-database/) /
 [MySQL](https://www.mysqltutorial.org/mysql-sample-database.aspx)
-sample database as RESTful and GraphQL web service.
+sample database as RESTful- and GraphQL web service.
 
 Installed Features:
 
@@ -12,6 +12,7 @@ Installed Features:
 - hibernate-orm
 - jaeger
 - jdbc-mysql
+- jdbc-postgresql
 - narayana-jta
 - resteasy
 - resteasy-jsonb
@@ -22,32 +23,57 @@ Installed Features:
 - swagger-ui
 - vertx
 
-## Database
+## Setup Database
 
 This project uses a slightly modified version of the
 [BIRT](https://eclipse.github.io/birt-website/docs/template-sample-database/) /
 [MySQL](https://www.mysqltutorial.org/mysql-sample-database.aspx)
 sample database 'ClassicModels'. To create the 'classicmodels' database use the
-MySQL scripts from the /misc/mysql directory.
+PostgreSQL or MySQL scripts from the `/misc/` directory. 
+Please update the `application.properties` file according to the selected database.
+
+### PostgreSQL
+
+```shell script
+# Start PSQL
+psql -U postgres
+
+# Create database
+CREATE DATABASE classicmodels WITH ENCODING 'UTF8' LC_COLLATE='German_Germany.1252' LC_CTYPE='German_Germany.1252';
+# Connect to the new database
+\c classicmodels
+
+# Create tables and import data
+
+# Option 1: Use create script.
+# Make sure you have set the correct paths to the data files in the script.
+\i {project}/misc/postgres/create_classicmodels.sql
+
+# Option 2: Use the database dump
+\i {project}/misc/postgres/classicmodels_dump.sql
+```
+
+### MySQL
 
 ```shell script
 # Start the mysql utility
 mysql --local-infile=1 -u root -p
 
 # Enabling LOAD DATA LOCAL INFILE in mysql
-mysql> SET GLOBAL local_infile=1;
+SET GLOBAL local_infile=1;
 
 # Create the ClassicModels database and load the schema and content
-mysql> create database classicmodels;
-mysql> use classicmodels;
-mysql> source create_classicmodels-auto_increment.sql;
-mysql> source load_classicmodels.sql;
-mysql> quit;
+create database classicmodels;
+use classicmodels;
+source create_classicmodels-auto_increment.sql;
+source load_classicmodels.sql;
+quit;
 ```
 
 ## Testing
 
-
+The application contains GraphQL test cases based on generated GraphQL-Operations.
+In case of significant changes of the schema, the operations and tests must be updated.
 
 ### Generate GraphQL Operations
 
@@ -55,7 +81,7 @@ Use [gql-generator](https://github.com/timqian/gql-generator)
 to generate queries and mutations from GraphQL Schema.
 Copy the Schema file from
 [/graphql/schema.graphql](http://localhost:8081/graphql/schema.graphql)
-into the test resource directory (src\test\resources\graphql) and run the generator.
+into the test resource directory `src\test\resources\graphql` and run the generator.
 
 ```shell script
 # Install
@@ -79,11 +105,11 @@ You can run your application in dev mode that enables live coding using:
 ## Using Opentracing
 
 A detailed guide to Opentracing can be found [here](https://quarkus.io/guides/opentracing). \
-Start the tracing system to collect and display the captured traces
+Start the tracing system to collect and display the captured traces:
 ```shell script
 docker run -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 jaegertracing/all-in-one:latest
 ```
-Start the application in dev mode
+Start the application in dev mode:
 ```shell script
 ./mvnw compile quarkus:dev
 ```

@@ -22,8 +22,8 @@ public class ProductLine implements GenericEntity, Serializable {
   @Column(columnDefinition = "mediumtext")
   private String htmlDescription;
 
-  @Lob
-  @Column(columnDefinition="mediumblob")
+//  @Lob
+//  @Column(columnDefinition="mediumblob")
   private byte[] image;
 
   public String getId() {
