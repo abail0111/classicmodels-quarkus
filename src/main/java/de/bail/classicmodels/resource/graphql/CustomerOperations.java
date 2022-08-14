@@ -37,7 +37,7 @@ public class CustomerOperations {
         // load all customer by employee id
         List<Integer> employeeIDs = employees.stream().map(Employee::getId).collect(Collectors.toList());
         List<Customer> customer = service.getAllCustomerByEmployees(employeeIDs);
-        // map employees to office
+        // map employees to customer
         Map<Integer, List<Customer>> customerMap = customer.stream().collect(Collectors.groupingBy(c -> c.getSalesRepEmployee().getId(), HashMap::new, Collectors.toCollection(ArrayList::new)));
         List<List<Customer>> results = new ArrayList<>();
         employees.forEach(employee -> results.add(customerMap.get(employee.getId())));

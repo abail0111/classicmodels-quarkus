@@ -3,25 +3,7 @@
 The Classic Models API project is a Quarkus implementation of the
 [BIRT](https://eclipse.github.io/birt-website/docs/template-sample-database/) /
 [MySQL](https://www.mysqltutorial.org/mysql-sample-database.aspx)
-sample database as RESTful- and GraphQL web service.
-
-Installed Features:
-
-- agroal 
-- cdi 
-- hibernate-orm
-- jaeger
-- jdbc-mysql
-- jdbc-postgresql
-- narayana-jta
-- resteasy
-- resteasy-jsonb
-- smallrye-context-propagation
-- smallrye-graphql
-- smallrye-openapi
-- smallrye-opentracing
-- swagger-ui
-- vertx
+sample database as a RESTful- and GraphQL web service.
 
 ## Setup Database
 
