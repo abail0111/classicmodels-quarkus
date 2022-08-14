@@ -20,8 +20,7 @@ public class LinkService {
     @ConfigProperty(name = "quarkus.http.port")
     protected String port;
 
-    @ConfigProperty(name = "quarkus.ssl.native")
-    protected boolean sslEnabled;
+    protected boolean sslEnabled = false;
 
     @ConfigProperty(name = "classicmodels.link.uri.relative")
     protected boolean relativeLinks;
